@@ -1,4 +1,15 @@
 {
+  "build": {
+    "dev": {
+      "node": "16.13.0",
+      "distribution": "interal",
+      "developmentClient": false,
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleDebug"
+      }
+    }
+  },
   "name": "reanimating",
   "displayName": "reanimating"
 }

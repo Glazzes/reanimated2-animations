@@ -1,40 +1,31 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {Navigation, NavigationFunctionComponent} from 'react-native-navigation';
 import {Button} from 'react-native-paper';
 
-const App: NavigationFunctionComponent = ({componentId}) => {
-  const goToSecond = () => {
-    Navigation.push(componentId, {
-      component: {
-        name: 'ScreenTwo',
-        options: {
-          animations: {
-            push: {
-              sharedElementTransitions: [
-                {
-                  fromId: 'hello',
-                  toId: 'helloDest',
-                  interpolation: {
-                    type: 'linear',
-                  },
-                },
-              ],
-            },
-          },
-        },
-      },
-    });
-  };
+type PassProps = {
+  name: string;
+};
 
+const App: NavigationFunctionComponent = ({componentId}) => {
   return (
-    <View>
-      <Text nativeID={'hello'}>Hello world</Text>
+    <View style={{flex: 1}}>
       <Button mode={'contained'} onPress={goToSecond}>
         Go to second
       </Button>
+      <View style={styles.container}>
+        <Text nativeID={'hello'}>Hello world</Text>
+        <Text nativeID={'hello2'}>Hello world</Text>
+      </View>
     </View>
   );
 };
 
 export default App;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+});

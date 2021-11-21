@@ -3,21 +3,20 @@
     "version": ">= 0.37.0"
   },
   "build": {
-    "development": {
+    "dev": {
+      "node": "16.13.0",
       "distribution": "internal",
       "android": {
-        "gradleCommand": ":app:assembleDebug"
-      },
-      "ios": {
-        "buildConfiguration": "Debug"
+        "gradleCommand": ":app:assembleDebug",
+        "buildType": "apk"
       }
     },
-    "preview": {
-      "distribution": "internal"
-    },
-    "production": {}
-  },
-  "submit": {
-    "production": {}
+    "prod": {
+      "distribution": "internal",
+      "android": {
+        "gradleCommand": ":app:assembleRelease",
+        "buildType": "apk"
+      }
+    }
   }
 }

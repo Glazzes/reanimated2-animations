@@ -1,6 +1,6 @@
 import {Dimensions} from 'react-native';
-import {Layout} from 'react-native-navigation';
-import {Fruit} from '../utils/data';
+import {Layout, Options} from 'react-native-navigation';
+import {Fruit} from '../utils/types';
 
 const DURATION = 250;
 
@@ -16,12 +16,24 @@ export const fromFruitToDetail = (
       name: destination,
       options: {
         statusBar: {
-          backgroundColor: '#fff',
-          style: 'dark',
+          visible: false,
         },
         animations: {
           push: {
             elementTransitions: [
+              {
+                id: 'appbar',
+                alpha: {
+                  from: 0,
+                  to: 1,
+                  duration: DURATION * 4,
+                },
+                y: {
+                  from: height,
+                  to: 0,
+                  duration: DURATION * 2,
+                },
+              },
               {
                 id: 'info',
                 alpha: {
@@ -56,6 +68,22 @@ export const fromFruitToDetail = (
             ],
           },
         },
+      },
+    },
+  };
+};
+
+export const fromDetailToCart = (fruitName: string): Options => {
+  return {
+    animations: {
+      pop: {
+        sharedElementTransitions: [
+          {
+            fromId: `fruit-${fruitName}-detail`,
+            toId: `fruit-${fruitName}-cart`,
+            duration: DURATION * 1.5,
+          },
+        ],
       },
     },
   };

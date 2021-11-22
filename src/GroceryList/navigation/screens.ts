@@ -1,3 +1,4 @@
 export enum Screens {
-  DetailScreen = 'GroceyList.Detail',
+  GroceryHome = 'Grocery',
+  GroceryDetailScreen = 'GroceyList.Detail',
 }

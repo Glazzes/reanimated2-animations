@@ -1,9 +1,4 @@
-export type Fruit = {
-  name: string;
-  price: number;
-  image: any;
-  weight: string;
-};
+import {Fruit} from './types';
 
 export const fruits: Fruit[] = [
   {

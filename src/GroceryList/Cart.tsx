@@ -7,21 +7,38 @@ import {
 } from 'react-native-gesture-handler';
 import Animated, {
   useAnimatedGestureHandler,
+  useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import CartPreview from './CartPreview';
+import CartProductList from './CartProductList';
 
 type CartProps = {
   translateY: Animated.SharedValue<number>;
 };
 
 const Cart: React.FC<CartProps> = ({translateY}) => {
+  const opacity = useSharedValue<number>(1);
+  const rHeight = useSharedValue<number>(height * 0.2);
+
   const onSwipeUp = useAnimatedGestureHandler<FlingGestureHandlerGestureEvent>({
-    onActive: _ => (translateY.value = withTiming(-height * 0.75)),
+    onActive: _ => {
+      translateY.value = withTiming(-height * 0.75);
+      opacity.value = withTiming(0);
+      rHeight.value = withTiming(height * 0.1);
+    },
   });
 
   const onSwipeDown =
     useAnimatedGestureHandler<FlingGestureHandlerGestureEvent>({
-      onActive: _ => (translateY.value = withTiming(0)),
+      onActive: _ => {
+        translateY.value = withTiming(0, {}, isFinished => {
+          if (isFinished) {
+            opacity.value = withTiming(1);
+          }
+        });
+        rHeight.value = withTiming(height * 0.2);
+      },
     });
 
   return (
@@ -30,7 +47,10 @@ const Cart: React.FC<CartProps> = ({translateY}) => {
         <FlingGestureHandler
           direction={Directions.DOWN}
           onGestureEvent={onSwipeDown}>
-          <Animated.View style={styles.container} />
+          <Animated.View style={styles.container}>
+            <CartPreview opacity={opacity} height={rHeight} />
+            <CartProductList />
+          </Animated.View>
         </FlingGestureHandler>
       </Animated.View>
     </FlingGestureHandler>
@@ -40,7 +60,6 @@ const Cart: React.FC<CartProps> = ({translateY}) => {
 export default Cart;
 
 const {height, width} = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   root: {
     width,

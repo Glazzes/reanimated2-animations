@@ -41,8 +41,8 @@ const styles = StyleSheet.create({
   container: {
     height: height * 0.8,
     backgroundColor: '#f7f5f1',
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-    paddingBottom: 20,
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
+    overflow: 'hidden',
   },
 });

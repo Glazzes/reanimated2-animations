@@ -1,9 +1,10 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {ListRenderItemInfo, StyleSheet} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {Navigation} from 'react-native-navigation';
 import FruitListItem from './FruitListItem';
-import {Fruit, fruits} from './utils/data';
+import {fruits} from './utils/data';
+import {Fruit} from './utils/types';
 import {fromFruitToDetail} from './navigation/transtitions';
 import {Screens} from './navigation/screens';
 
@@ -23,11 +24,11 @@ const List: React.FC<ListProps> = ({parentComponentId}) => {
       contentContainerStyle={styles.flatList}
       numColumns={2}
       showsVerticalScrollIndicator={false}
-      renderItem={({item}: {item: Fruit}) => {
+      renderItem={({item}: ListRenderItemInfo<Fruit>) => {
         const onPress = () => {
           Navigation.push(
             parentComponentId,
-            fromFruitToDetail(Screens.DetailScreen, item),
+            fromFruitToDetail(Screens.GroceryDetailScreen, item),
           );
         };
 
@@ -42,7 +43,6 @@ export default List;
 const styles = StyleSheet.create({
   flatList: {
     padding: 5,
-    marginBottom: 20,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     alignItems: 'center',

@@ -7,11 +7,12 @@ import {
   StyleSheet,
   View,
   Dimensions,
+  Pressable,
 } from 'react-native';
 import MateirlaIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ProgressBar} from 'react-native-paper';
-import {useGroceryStore} from './store/store';
-import {CartFruit} from './utils/types';
+import {useGroceryStore} from '../../store/store';
+import {CartFruit} from '../../utils/types';
 
 function keyExtractor(cartFruit: CartFruit) {
   return `fruit-${cartFruit.fruit.name}-product`;
@@ -45,6 +46,9 @@ const CartProductList = () => {
     .map(f => f.quantity * f.fruit.price)
     .reduce((prev, next) => prev + next, 0);
 
+  const delivery = total === 0 ? 0 : total <= 40 ? 10 : 0;
+  const toalPlusDelivery = total + delivery;
+
   return (
     <View style={styles.root}>
       <Text style={styles.title}>Cart</Text>
@@ -53,7 +57,6 @@ const CartProductList = () => {
           data={fruits}
           keyExtractor={keyExtractor}
           renderItem={renderItem}
-          showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.flatList}
         />
       </View>
@@ -67,9 +70,28 @@ const CartProductList = () => {
           <Text style={styles.deliveryInfoText}>
             All orders of $40 or more qualify for free delivery
           </Text>
-          <ProgressBar progress={0.5} color={'#4d4d4d'} />
+          <ProgressBar
+            progress={Math.min(1, (total * 100) / 40 / 100)}
+            color={'#4d4d4d'}
+            style={styles.progressBar}
+          />
         </View>
-        <Text style={styles.baseText}>$10</Text>
+        <Text style={[styles.baseText, styles.infoPrice]}>${delivery}</Text>
+      </View>
+      <View style={styles.checkout}>
+        <View style={styles.total}>
+          <Text style={styles.totalText}>Total :</Text>
+          <Text style={styles.totalPrice}>
+            ${Math.max(0, toalPlusDelivery)}
+          </Text>
+        </View>
+      </View>
+      <View style={styles.buttonContainer}>
+        <Pressable>
+          <View style={styles.addToCartButton}>
+            <Text style={styles.buttonText}>Add to cart</Text>
+          </View>
+        </Pressable>
       </View>
     </View>
   );
@@ -92,7 +114,7 @@ const styles = StyleSheet.create({
     marginBottom: SPACCING * 2,
   },
   flatListContainer: {
-    height: SIZE * 3 + SPACCING * 8,
+    height: SIZE * 3 + SPACCING * 6,
     width,
   },
   flatList: {
@@ -106,7 +128,7 @@ const styles = StyleSheet.create({
   product: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: SPACCING * 1.5,
+    marginVertical: SPACCING,
   },
   image: {
     width: SIZE,
@@ -140,10 +162,56 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   deliveryInfo: {
+    flex: 1,
+    paddingVertical: SPACCING,
+    paddingHorizontal: SPACCING * 1.5,
     justifyContent: 'flex-start',
   },
   deliveryInfoText: {
+    marginTop: 5,
     color: '#4d4d4d',
-    fontSize: 15,
+    fontSize: 18,
+  },
+  infoPrice: {
+    marginTop: SPACCING,
+  },
+  progressBar: {
+    marginTop: SPACCING * 1.5,
+  },
+  checkout: {
+    justifyContent: 'space-between',
+  },
+  total: {
+    flexDirection: 'row',
+    marginTop: SPACCING * 2,
+    justifyContent: 'space-between',
+    paddingHorizontal: SPACCING * 3.5,
+  },
+  totalText: {
+    fontFamily: 'SFProDisplayBold',
+    color: '#4d4d4d',
+    fontSize: 25,
+  },
+  totalPrice: {
+    fontFamily: 'SFProDisplayBold',
+    color: '#fff',
+    fontSize: 35,
+  },
+  buttonContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addToCartButton: {
+    height: 60,
+    backgroundColor: '#ffba42',
+    width: width - SPACCING * 7,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonText: {
+    fontSize: 20,
+    fontFamily: 'SFProDisplayBold',
   },
 });

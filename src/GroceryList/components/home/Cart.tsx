@@ -25,7 +25,7 @@ const Cart: React.FC<CartProps> = ({translateY}) => {
     onActive: _ => {
       translateY.value = withTiming(-height * 0.75);
       opacity.value = withTiming(0);
-      rHeight.value = withTiming(height * 0.1);
+      rHeight.value = withTiming(height * 0.075);
     },
   });
 

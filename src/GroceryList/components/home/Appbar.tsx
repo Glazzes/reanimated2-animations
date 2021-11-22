@@ -5,7 +5,7 @@ import {Appbar as PaperAppbar} from 'react-native-paper';
 const Appbar = () => {
   return (
     <PaperAppbar.Header style={styles.appbar}>
-      <PaperAppbar.Action color={'#42403e'} icon={'chevron-left'} />
+      <PaperAppbar.Action icon={'chevron-left'} />
       <PaperAppbar.Content
         title={'Fruits and vegetables'}
         titleStyle={styles.title}
@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     elevation: 0,
   },
   title: {
-    fontSize: 18,
+    fontSize: 20,
+    fontFamily: 'SFProDisplayBold',
   },
 });

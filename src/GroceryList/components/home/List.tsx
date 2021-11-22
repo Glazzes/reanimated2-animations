@@ -3,10 +3,10 @@ import {ListRenderItemInfo, StyleSheet} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {Navigation} from 'react-native-navigation';
 import FruitListItem from './FruitListItem';
-import {fruits} from './utils/data';
-import {Fruit} from './utils/types';
-import {fromFruitToDetail} from './navigation/transtitions';
-import {Screens} from './navigation/screens';
+import {fruits} from '../../utils/data';
+import {Fruit} from '../../utils/types';
+import {fromFruitToDetail} from '../../navigation/transtitions';
+import {Screens} from '../../navigation/screens';
 
 function keyExtractor(fruit: Fruit): string {
   return `fruit-${fruit.name}`;

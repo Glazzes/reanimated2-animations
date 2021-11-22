@@ -1,11 +1,18 @@
 import React, {useState} from 'react';
-import {Dimensions, Image, StyleSheet, View, Text} from 'react-native';
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  View,
+  Text,
+  Pressable,
+} from 'react-native';
 import {Navigation, NavigationFunctionComponent} from 'react-native-navigation';
-import QuaintitySelector from './components/detail/QuaintitySelector';
-import {Appbar, IconButton, TouchableRipple} from 'react-native-paper';
-import {useGroceryStore} from './store/store';
-import {fromDetailToCart} from './navigation/transtitions';
-import {Fruit} from './utils/types';
+import QuaintitySelector from './QuaintitySelector';
+import {Appbar, IconButton} from 'react-native-paper';
+import {useGroceryStore} from '../../store/store';
+import {fromDetailToCart} from '../../navigation/transtitions';
+import {Fruit} from '../../utils/types';
 
 type FruitDetailProps = {
   fruit: Fruit;
@@ -19,7 +26,7 @@ function timeout(delay: number) {
   return new Promise(res => setTimeout(res, delay));
 }
 
-const FruitDetail: NavigationFunctionComponent<FruitDetailProps> = ({
+const GroceryDetail: NavigationFunctionComponent<FruitDetailProps> = ({
   componentId,
   fruit,
 }) => {
@@ -62,18 +69,18 @@ const FruitDetail: NavigationFunctionComponent<FruitDetailProps> = ({
         </View>
         <View style={styles.buttonContainer}>
           <IconButton icon={'heart-outline'} size={30} onPress={() => {}} />
-          <TouchableRipple onPress={addToCart} style={styles.ripple}>
+          <Pressable onPress={addToCart}>
             <View style={styles.addToCartButton}>
               <Text style={styles.buttonText}>Add to cart</Text>
             </View>
-          </TouchableRipple>
+          </Pressable>
         </View>
       </View>
     </View>
   );
 };
 
-export default FruitDetail;
+export default GroceryDetail;
 
 const {height, width} = Dimensions.get('window');
 const styles = StyleSheet.create({
@@ -127,9 +134,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-  },
-  ripple: {
-    borderRadius: 30,
   },
   addToCartButton: {
     height: 60,

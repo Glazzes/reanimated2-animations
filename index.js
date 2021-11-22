@@ -1,13 +1,12 @@
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {Navigation} from 'react-native-navigation';
-import {GroceryList} from './src/GroceryList';
-import FruitDetail from './src/GroceryList/FruitDetail';
+import {GroceryList, GroceryDetail} from './src/GroceryList';
 
 Navigation.registerComponent('GroceryList', () =>
   gestureHandlerRootHOC(GroceryList),
 );
 
-Navigation.registerComponent('GroceyList.Detail', () => FruitDetail);
+Navigation.registerComponent('GroceyList.Detail', () => GroceryDetail);
 
 Navigation.setDefaultOptions({
   topBar: {

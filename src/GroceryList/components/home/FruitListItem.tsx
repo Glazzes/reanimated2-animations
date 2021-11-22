@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import {Fruit} from './utils/data';
+import {Fruit} from '../../utils/types';
 
 type FruitListItemProps = {
   fruit: Fruit;
@@ -36,7 +36,7 @@ const FruitListItem: React.FC<FruitListItemProps> = ({fruit, onPress}) => {
 
 export default React.memo(FruitListItem);
 
-const IMAGE_SIZE = (width - 30) / 2;
+const IMAGE_SIZE = (width - 50) / 2;
 const styles = StyleSheet.create({
   root: {
     marginHorizontal: 5,
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   },
   price: {
     fontWeight: 'bold',
-    fontSize: 25,
+    fontSize: 30,
     paddingLeft: 15,
   },
   info: {
@@ -62,10 +62,10 @@ const styles = StyleSheet.create({
   },
   name: {
     fontWeight: 'bold',
-    fontSize: 17,
+    fontSize: 20,
   },
   weight: {
-    fontSize: 15,
+    fontSize: 17,
     color: '#dadada',
     fontWeight: 'bold',
   },

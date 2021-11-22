@@ -14,6 +14,12 @@ export const fruits: Fruit[] = [
     weight: '500g',
   },
   {
+    name: 'Pineapple Caliber',
+    price: 7.5,
+    image: require('../assets/pineapple.png'),
+    weight: '1000g',
+  },
+  {
     name: 'Guava',
     price: 10.0,
     image: require('../assets/guava.png'),

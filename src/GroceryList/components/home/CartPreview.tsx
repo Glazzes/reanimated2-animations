@@ -2,8 +2,8 @@ import React from 'react';
 import {Image, ListRenderItemInfo, StyleSheet, Text, View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import Animated, {useAnimatedStyle} from 'react-native-reanimated';
-import {useGroceryStore} from './store/store';
-import {CartFruit} from './utils/types';
+import {useGroceryStore} from '../../store/store';
+import {CartFruit} from '../../utils/types';
 
 type CartPreviewProps = {
   opacity: Animated.SharedValue<number>;

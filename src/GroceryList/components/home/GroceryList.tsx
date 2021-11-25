@@ -5,6 +5,7 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated';
+import DrawerWrapper from '../../../navigation/DrawerWrapper';
 import Appbar from './Appbar';
 import Cart from './Cart';
 import List from './List';
@@ -17,13 +18,15 @@ const GroceryList: NavigationFunctionComponent = ({componentId}) => {
   }));
 
   return (
-    <Animated.View style={[styles.rootContainer, rStyle]}>
-      <Animated.View style={[styles.container]}>
-        <Appbar />
-        <List parentComponentId={componentId} />
+    <DrawerWrapper parentComponentId={componentId}>
+      <Animated.View style={[styles.rootContainer, rStyle]}>
+        <Animated.View style={[styles.container]}>
+          <Appbar />
+          <List parentComponentId={componentId} />
+        </Animated.View>
+        <Cart translateY={translateY} />
       </Animated.View>
-      <Cart translateY={translateY} />
-    </Animated.View>
+    </DrawerWrapper>
   );
 };
 

@@ -5,8 +5,21 @@ Since the first release candidate of [Reanimated 2](https://docs.swmansion.com/r
 
 ## Known Problems
 - React native lists components do not support masorny layout
-- Shared element transitions with React navigation are very limited, therefore a native navigation library is prefered due to its perfomance and ability to customize transitions
-- Resuming previous point, [wix/react-native-navigation](https://github.com/wix/react-native-navigation)'s installation process conflicts with the expo package, so custom development clients are not an option, react-native-unimodules are the way to go for now
+- Shared element transitions with [React Navigation Shared Element](https://github.com/IjzerenHein/react-navigation-shared-element) are very limited, therefore a native navigation library is prefered due to its perfomance and ability to customize transitions
+
+## Build
+In case you don't have an Android SDK installed in your machine, you can compile a apk of this project in the cloud by using [Expo application services](https://expo.dev/) or just `eas` for short, install the `eas-cli` package
+```npm
+npm install -g eas-cli@0.38
+```
+You'll need an [Expo](https://expo.dev/) account aswell in order to build the project, it just takes a couple of seconds and with that done, run:
+```
+eas build --profile=dev --platform=android
+```
+This will build the project for you in the cloud, now all you have to do is wait for the link of the project apk.
 
 ## Animations
+Each and everyone of the following animations have a `README.md` file showcasing screenshots of the animation, video footage and techniques used to build such animation.
+
 [Grocery app animation](https://github.com/Glazzes/reanimated2-animations/tree/main/src/GroceryList)
+[Bezier slider](ttps://github.com/Glazzes/reanimated2-animations/tree/main/src/BezierSlider)

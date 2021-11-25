@@ -12,6 +12,9 @@ import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import expo.modules.ApplicationLifecycleDispatcher;
+import android.content.res.Configuration;
+
 import com.swmansion.reanimated.ReanimatedJSIModulePackage;
 import com.facebook.react.bridge.JSIModulePackage;
 
@@ -55,6 +58,7 @@ public class MainApplication extends NavigationApplication {
     super.onCreate();
     
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+    ApplicationLifecycleDispatcher.onApplicationCreate(this);
   }
 
   /**
@@ -87,4 +91,12 @@ public class MainApplication extends NavigationApplication {
       }
     }
   }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+    ApplicationLifecycleDispatcher.onConfigurationChanged(this, newConfig);
+  }
+
+
 }

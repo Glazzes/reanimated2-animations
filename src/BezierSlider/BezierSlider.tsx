@@ -7,6 +7,7 @@ import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
+  withDecay,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
@@ -17,9 +18,11 @@ import {
 } from 'react-native-gesture-handler';
 import {Appbar} from 'react-native-paper';
 import {NavigationFunctionComponent} from 'react-native-navigation';
+import DrawerWrapper from '../navigation/DrawerWrapper';
+import Weight from './Weight';
 
-const R = 25;
-const {width} = Dimensions.get('window');
+export const R = 25;
+const {width, height} = Dimensions.get('window');
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
 const curve = (c1: Vector, c2: Vector, to: Vector): string => {
@@ -27,9 +30,10 @@ const curve = (c1: Vector, c2: Vector, to: Vector): string => {
   return `C ${c1.x} ${c1.y} ${c2.x} ${c2.y} ${to.x} ${to.y}`;
 };
 
-const BezierSlider: NavigationFunctionComponent = () => {
+const BezierSlider: NavigationFunctionComponent = ({componentId}) => {
   const translateX = useSharedValue<number>(0);
   const translateY = useSharedValue<number>(0);
+  const isRunning = useSharedValue<boolean>(false);
 
   const halfStep = useSharedValue<number>(R * 2);
   const fullStep = useSharedValue<number>(R * 2);
@@ -85,6 +89,7 @@ const BezierSlider: NavigationFunctionComponent = () => {
     {x: number}
   >({
     onStart: (_, ctx) => {
+      isRunning.value = true;
       ctx.x = translateX.value;
       halfStep.value = withTiming(R + R / 2);
       fullStep.value = withTiming(R);
@@ -92,14 +97,19 @@ const BezierSlider: NavigationFunctionComponent = () => {
     },
     onActive: (e, ctx) => {
       translateX.value = Math.max(
-        -width / 2 + R,
-        Math.min(ctx.x + e.translationX, width / 2 - R),
+        -width / 2 + R * 2,
+        Math.min(ctx.x + e.translationX, width / 2 - R - 10),
       );
     },
-    onEnd: _ => {
+    onEnd: ({velocityX}) => {
       translateY.value = withTiming(0);
       halfStep.value = withSpring(R * 2);
       fullStep.value = withSpring(R * 2);
+      translateX.value = withDecay({
+        velocity: velocityX,
+        clamp: [-width / 2 + R, width / 2 - R],
+      });
+      isRunning.value = false;
     },
   });
 
@@ -113,29 +123,38 @@ const BezierSlider: NavigationFunctionComponent = () => {
   });
 
   return (
-    <View style={styles.root}>
-      <Appbar.Header style={styles.appbar}>
-        <Appbar.BackAction color={'#212027'} />
-      </Appbar.Header>
-      <View style={styles.textContainer}>
-        <Text style={styles.title}>What is your weight goal?</Text>
-        <ReText style={styles.weight} text={weightStatus} />
-      </View>
-      <SVG width={width} height={57}>
-        <AnimatedPath
-          animatedProps={aniamtedProps}
-          stroke={'#cdcdd2'}
-          strokeWidth={3}
+    <DrawerWrapper parentComponentId={componentId}>
+      <View style={styles.root}>
+        <Appbar.Header style={styles.appbar}>
+          <Appbar.BackAction color={'#212027'} />
+        </Appbar.Header>
+        <View style={styles.textContainer}>
+          <Text style={styles.title}>What is your weight goal?</Text>
+          <ReText style={styles.weight} text={weightStatus} />
+        </View>
+        <Weight
+          translateX={translateX}
+          translateY={translateY}
+          isRunning={isRunning}
         />
-      </SVG>
-      <PanGestureHandler onGestureEvent={onGestureEvent}>
-        <Animated.View style={[styles.sliderBall, rStyle]} />
-      </PanGestureHandler>
-      <View style={styles.weightContainer}>
-        <Text style={styles.weightNumber}>40</Text>
-        <Text style={styles.weightNumber}>120</Text>
+        <View>
+          <SVG width={width} height={60}>
+            <AnimatedPath
+              animatedProps={aniamtedProps}
+              stroke={'#cdcdd2'}
+              strokeWidth={3}
+            />
+          </SVG>
+        </View>
+        <PanGestureHandler onGestureEvent={onGestureEvent}>
+          <Animated.View style={[styles.sliderBall, rStyle]} />
+        </PanGestureHandler>
+        <View style={styles.weightContainer}>
+          <Text style={styles.weightNumber}>40</Text>
+          <Text style={styles.weightNumber}>120</Text>
+        </View>
       </View>
-    </View>
+    </DrawerWrapper>
   );
 };
 
@@ -160,13 +179,16 @@ const styles = StyleSheet.create({
     color: '#212027',
     fontSize: 30,
     maxWidth: width * 0.6,
-    fontWeight: 'bold',
-    marginBottom: 15,
+    fontFamily: 'SFProDisplayBold',
   },
   weight: {
     color: '#cdcdd2',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'SFProDisplayBold',
+  },
+  svgContainer: {
+    position: 'absolute',
+    top: height / 2,
   },
   sliderBall: {
     backgroundColor: '#212027',

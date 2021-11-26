@@ -18,9 +18,13 @@ Navigation.registerComponent('BezierSlider', () =>
 );
 
 Navigation.setDefaultOptions({
+  statusBar: {
+    backgroundColor: '#fff',
+    style: 'dark',
+    drawBehind: true,
+  },
   topBar: {
     visible: false,
-    animate: true,
   },
 });
 
@@ -31,7 +35,7 @@ Navigation.events().registerAppLaunchedListener(() => {
         children: [
           {
             component: {
-              name: 'GroceryApp',
+              name: 'BezierSlider',
               options: {
                 statusBar: {
                   backgroundColor: '#f7f5f1',

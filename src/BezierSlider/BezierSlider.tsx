@@ -2,16 +2,18 @@ import React from 'react';
 import {StyleSheet, View, Dimensions, Text} from 'react-native';
 import SVG, {Path} from 'react-native-svg';
 import Animated, {
+  Extrapolate,
+  interpolate,
   useAnimatedGestureHandler,
   useAnimatedProps,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
-  withDecay,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import {ReText, vec2, Vector} from 'react-native-redash';
+import {ReText, vec2} from 'react-native-redash';
+import {curve} from './utils/curve';
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
@@ -25,18 +27,10 @@ export const R = 25;
 const {width, height} = Dimensions.get('window');
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
-const curve = (c1: Vector, c2: Vector, to: Vector): string => {
-  'worklet';
-  return `C ${c1.x} ${c1.y} ${c2.x} ${c2.y} ${to.x} ${to.y}`;
-};
-
 const BezierSlider: NavigationFunctionComponent = ({componentId}) => {
   const translateX = useSharedValue<number>(0);
   const translateY = useSharedValue<number>(0);
   const isRunning = useSharedValue<boolean>(false);
-
-  const halfStep = useSharedValue<number>(R * 2);
-  const fullStep = useSharedValue<number>(R * 2);
 
   const weightStatus = useDerivedValue(() => {
     if (translateX.value >= -50 && translateX.value <= 50) {
@@ -50,30 +44,38 @@ const BezierSlider: NavigationFunctionComponent = ({componentId}) => {
     return 'Underweight';
   });
 
+  const direction = useSharedValue<number>(0);
+  const stepY = useSharedValue<Number>(0);
+  const rightShortener = useSharedValue<number>(0);
+  const leftShortener = useSharedValue<number>(0);
+  const rightTrial = useSharedValue<number>(0);
+  const leftTrial = useSharedValue<number>(0);
+
   const aniamtedProps = useAnimatedProps(() => {
-    const C = R * 0.5522847498;
+    const CURVE = R * 0.5522847498;
+    const HALF_CURVE = CURVE / 2;
 
-    const p1 = vec2(width / 2 - R * 2 + translateX.value, R * 2);
-    const p2 = vec2(p1.x + R, halfStep.value);
-    const p3 = vec2(p2.x + R, fullStep.value);
-    const p4 = vec2(p3.x + R, halfStep.value);
-    const p5 = vec2(p4.x + R, R * 2);
+    const p1 = vec2(width / 2 - R * 2 + translateX.value + leftTrial.value, 0);
+    const p2 = vec2(p1.x + R + leftTrial.value, p1.y + +stepY.value);
+    const p3 = vec2(p2.x + R, p2.y + +stepY.value);
+    const p4 = vec2(p3.x + R - leftShortener.value, p3.y - +stepY.value);
+    const p5 = vec2(p4.x + R - leftShortener.value, p4.y - +stepY.value);
 
-    const cp11 = vec2(p1.x + C, p1.y);
+    const cp11 = vec2(p1.x + HALF_CURVE, p1.y);
     const cp12 = vec2(p2.x, p2.y);
 
     const cp21 = vec2(p2.x, p2.y);
-    const cp22 = vec2(p3.x - C, p3.y);
+    const cp22 = vec2(p3.x - CURVE, p3.y);
 
-    const cp31 = vec2(p3.x + C, p3.y);
+    const cp31 = vec2(p3.x + CURVE, p3.y);
     const cp32 = vec2(p4.x, p4.y);
 
     const cp41 = vec2(p4.x, p4.y);
-    const cp42 = vec2(p5.x - C, p5.y);
+    const cp42 = vec2(p5.x - HALF_CURVE, p5.y);
 
     return {
       d: [
-        `M 0 ${R * 2}`,
+        'M 0 0',
         `H ${width / 2 - R * 2 + translateX.value}`,
         curve(cp11, cp12, p2),
         curve(cp21, cp22, p3),
@@ -86,29 +88,41 @@ const BezierSlider: NavigationFunctionComponent = ({componentId}) => {
 
   const onGestureEvent = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
-    {x: number}
+    {x: number; time?: number}
   >({
     onStart: (_, ctx) => {
       isRunning.value = true;
       ctx.x = translateX.value;
-      halfStep.value = withTiming(R + R / 2);
-      fullStep.value = withTiming(R);
+      stepY.value = withTiming(R / 3);
       translateY.value = withTiming(-R + 5);
     },
     onActive: (e, ctx) => {
       translateX.value = Math.max(
-        -width / 2 + R * 2,
-        Math.min(ctx.x + e.translationX, width / 2 - R - 10),
+        -width / 2 + R,
+        Math.min(ctx.x - e.translationX, width / 2 - R),
+      );
+
+      const now = new Date().getTime();
+      const deltaTime = now - (ctx?.time ?? 0);
+      const deltaX = e.translationX - ctx.x;
+
+      const velocity = deltaX / deltaTime;
+      console.log(velocity);
+
+      leftTrial.value = withTiming(
+        interpolate(velocity, [6, 0], [R / 2, 0], Extrapolate.CLAMP),
+      );
+
+      leftShortener.value = withTiming(
+        interpolate(velocity, [6, 0], [7.5, 0], Extrapolate.CLAMP),
       );
     },
-    onEnd: ({velocityX}) => {
+    onEnd: () => {
+      direction.value = withTiming(0);
       translateY.value = withTiming(0);
-      halfStep.value = withSpring(R * 2);
-      fullStep.value = withSpring(R * 2);
-      translateX.value = withDecay({
-        velocity: velocityX,
-        clamp: [-width / 2 + R, width / 2 - R],
-      });
+      stepY.value = withSpring(0);
+      leftTrial.value = withTiming(0);
+      leftShortener.value = withTiming(0);
       isRunning.value = false;
     },
   });
@@ -116,7 +130,7 @@ const BezierSlider: NavigationFunctionComponent = ({componentId}) => {
   const rStyle = useAnimatedStyle(() => {
     return {
       transform: [
-        {translateX: translateX.value},
+        {translateX: -translateX.value},
         {translateY: translateY.value},
       ],
     };
@@ -132,13 +146,9 @@ const BezierSlider: NavigationFunctionComponent = ({componentId}) => {
           <Text style={styles.title}>What is your weight goal?</Text>
           <ReText style={styles.weight} text={weightStatus} />
         </View>
-        <Weight
-          translateX={translateX}
-          translateY={translateY}
-          isRunning={isRunning}
-        />
-        <View>
-          <SVG width={width} height={60}>
+
+        <View style={styles.svgContainer}>
+          <SVG viewBox={`0 -3 ${width} 60`} width={width} height={60}>
             <AnimatedPath
               animatedProps={aniamtedProps}
               stroke={'#cdcdd2'}
@@ -188,7 +198,8 @@ const styles = StyleSheet.create({
   },
   svgContainer: {
     position: 'absolute',
-    top: height / 2,
+    top: height / 2 - 30,
+    transform: [{rotate: `${Math.PI}rad`}],
   },
   sliderBall: {
     backgroundColor: '#212027',

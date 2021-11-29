@@ -73,7 +73,7 @@ const Weight: React.FC<WeightProps> = ({translateY, translateX, isRunning}) => {
       Extrapolate.CLAMP,
     );
 
-    return `${Math.round(currentWeight)} kg`;
+    return `${Math.round(currentWeight)}`;
   });
 
   return (
@@ -88,5 +88,10 @@ export default Weight;
 const styles = StyleSheet.create({
   container: {
     alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  kg: {
+    color: '#cdcdd2',
   },
 });

@@ -17,17 +17,6 @@ Navigation.registerComponent('BezierSlider', () =>
   gestureHandlerRootHOC(BezierSlider),
 );
 
-Navigation.setDefaultOptions({
-  statusBar: {
-    backgroundColor: '#fff',
-    style: 'dark',
-    drawBehind: true,
-  },
-  topBar: {
-    visible: false,
-  },
-});
-
 Navigation.events().registerAppLaunchedListener(() => {
   Navigation.setRoot({
     root: {
@@ -38,8 +27,13 @@ Navigation.events().registerAppLaunchedListener(() => {
               name: 'BezierSlider',
               options: {
                 statusBar: {
-                  backgroundColor: '#f7f5f1',
+                  backgroundColor: '#fff',
                   style: 'dark',
+                  drawBehind: true,
+                },
+                topBar: {
+                  visible: false,
+                  animate: false,
                 },
               },
             },

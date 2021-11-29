@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions, StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet, Text} from 'react-native';
 import Animated, {
   Extrapolate,
   interpolate,
@@ -39,20 +39,16 @@ const Weight: React.FC<WeightProps> = ({translateY, translateX, isRunning}) => {
 
   const rStyleText = useAnimatedStyle(() => {
     const fontSize = interpolate(
-      translateX.value,
+      -translateX.value,
       [0, width / 2 - R],
-      [18, 23],
+      [18, 21],
       Extrapolate.CLAMP,
     );
 
     return {
       fontSize,
-      backgroundColor: backgroundColor.value,
       color: textColor.value,
       fontFamily: 'SFProDisplayBold',
-      paddingHorizontal: 15,
-      paddingVertical: 10,
-      borderRadius: 10,
     };
   });
 
@@ -60,16 +56,20 @@ const Weight: React.FC<WeightProps> = ({translateY, translateX, isRunning}) => {
     position: 'absolute',
     top: height / 2 - 30,
     transform: [
-      {translateY: 35 + translateY.value},
-      {translateX: translateX.value},
+      {translateY: translateY.value},
+      {translateX: -translateX.value},
     ],
+    backgroundColor: backgroundColor.value,
+    paddingHorizontal: 15,
+
+    borderRadius: 10,
   }));
 
   const weight = useDerivedValue(() => {
     const currentWeight = interpolate(
       translateX.value,
-      [-width / 2 - R * 2, 0, width / 2 - R],
-      [40, 70, 120],
+      [-width / 2 + R * 2, 0, width / 2 - R * 2],
+      [120, 70, 40],
       Extrapolate.CLAMP,
     );
 
@@ -79,6 +79,7 @@ const Weight: React.FC<WeightProps> = ({translateY, translateX, isRunning}) => {
   return (
     <Animated.View style={[rStyleContainer, styles.container]}>
       <ReText text={weight} style={rStyleText} />
+      <Text style={styles.kg}>kg</Text>
     </Animated.View>
   );
 };
@@ -93,5 +94,6 @@ const styles = StyleSheet.create({
   },
   kg: {
     color: '#cdcdd2',
+    fontSize: 15,
   },
 });

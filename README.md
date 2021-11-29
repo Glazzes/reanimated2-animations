@@ -23,4 +23,4 @@ This will build the project for you in the cloud, now all you have to do is wait
 Each and everyone of the following animations have a `README.md` file showcasing screenshots of the animation, video footage and techniques used to build such animation.
 
 - [Grocery app](https://github.com/Glazzes/reanimated2-animations/tree/main/src/GroceryList)
-- [Bezier slider](https://github.com/Glazzes/-reanimated2-animations/tree/main/src/BezierSlider)
+- [Bezier slider](https://github.com/Glazzes/reanimated2-animations/tree/main/src/BezierSlider)

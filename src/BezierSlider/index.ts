@@ -1,1 +1,1 @@
-export {default as BezierSlider} from './BezierSlider';
+export {default as BezierSlider} from './components/BezierSlider';

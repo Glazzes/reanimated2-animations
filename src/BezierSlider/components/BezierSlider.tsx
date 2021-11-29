@@ -13,14 +13,14 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {ReText, vec2} from 'react-native-redash';
-import {curve} from './utils/curve';
+import {curve} from '../utils/curve';
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler';
 import {Appbar} from 'react-native-paper';
 import {NavigationFunctionComponent} from 'react-native-navigation';
-import DrawerWrapper from '../navigation/DrawerWrapper';
+import DrawerWrapper from '../../navigation/DrawerWrapper';
 import Weight from './Weight';
 
 export const R = 25;
@@ -33,21 +33,19 @@ const BezierSlider: NavigationFunctionComponent = ({componentId}) => {
   const isRunning = useSharedValue<boolean>(false);
 
   const weightStatus = useDerivedValue(() => {
-    if (translateX.value >= -50 && translateX.value <= 50) {
+    if (-translateX.value >= -50 && -translateX.value <= 50) {
       return 'Balanced';
     }
 
-    if (translateX.value >= 50) {
+    if (-translateX.value >= 50) {
       return 'Overweight';
     }
 
     return 'Underweight';
   });
 
-  const direction = useSharedValue<number>(0);
+  const velocity = useSharedValue<number>(0);
   const stepY = useSharedValue<Number>(0);
-  const rightShortener = useSharedValue<number>(0);
-  const leftShortener = useSharedValue<number>(0);
   const rightTrial = useSharedValue<number>(0);
   const leftTrial = useSharedValue<number>(0);
 
@@ -55,11 +53,11 @@ const BezierSlider: NavigationFunctionComponent = ({componentId}) => {
     const CURVE = R * 0.5522847498;
     const HALF_CURVE = CURVE / 2;
 
-    const p1 = vec2(width / 2 - R * 2 + translateX.value + leftTrial.value, 0);
-    const p2 = vec2(p1.x + R + leftTrial.value, p1.y + +stepY.value);
+    const p1 = vec2(width / 2 - R * 2 + translateX.value, 0);
+    const p2 = vec2(p1.x + R, p1.y + +stepY.value);
     const p3 = vec2(p2.x + R, p2.y + +stepY.value);
-    const p4 = vec2(p3.x + R - leftShortener.value, p3.y - +stepY.value);
-    const p5 = vec2(p4.x + R - leftShortener.value, p4.y - +stepY.value);
+    const p4 = vec2(p3.x + R, p3.y - +stepY.value);
+    const p5 = vec2(p4.x + R, p4.y - +stepY.value);
 
     const cp11 = vec2(p1.x + HALF_CURVE, p1.y);
     const cp12 = vec2(p2.x, p2.y);
@@ -93,36 +91,42 @@ const BezierSlider: NavigationFunctionComponent = ({componentId}) => {
     onStart: (_, ctx) => {
       isRunning.value = true;
       ctx.x = translateX.value;
-      stepY.value = withTiming(R / 3);
-      translateY.value = withTiming(-R + 5);
+      stepY.value = withTiming(R / 4);
+      translateY.value = withTiming(-R * 0.75);
     },
     onActive: (e, ctx) => {
       translateX.value = Math.max(
-        -width / 2 + R,
-        Math.min(ctx.x - e.translationX, width / 2 - R),
+        -width / 2 + R * 2,
+        Math.min(ctx.x - e.translationX, width / 2 - R * 2),
       );
 
       const now = new Date().getTime();
       const deltaTime = now - (ctx?.time ?? 0);
       const deltaX = e.translationX - ctx.x;
+      velocity.value = deltaX / deltaTime;
 
-      const velocity = deltaX / deltaTime;
-      console.log(velocity);
-
-      leftTrial.value = withTiming(
-        interpolate(velocity, [6, 0], [R / 2, 0], Extrapolate.CLAMP),
+      leftTrial.value = interpolate(
+        velocity.value,
+        [0, 2],
+        [0, R],
+        Extrapolate.CLAMP,
       );
 
-      leftShortener.value = withTiming(
-        interpolate(velocity, [6, 0], [7.5, 0], Extrapolate.CLAMP),
+      rightTrial.value = interpolate(
+        velocity.value,
+        [-2, 0],
+        [R, 0],
+        Extrapolate.CLAMP,
       );
+
+      ctx.time = now;
     },
     onEnd: () => {
-      direction.value = withTiming(0);
+      velocity.value = withTiming(0);
       translateY.value = withTiming(0);
       stepY.value = withSpring(0);
       leftTrial.value = withTiming(0);
-      leftShortener.value = withTiming(0);
+      rightTrial.value = withTiming(0);
       isRunning.value = false;
     },
   });
@@ -148,7 +152,11 @@ const BezierSlider: NavigationFunctionComponent = ({componentId}) => {
         </View>
 
         <View style={styles.svgContainer}>
-          <SVG viewBox={`0 -3 ${width} 60`} width={width} height={60}>
+          <View style={styles.weightContainer}>
+            <Text style={styles.weightNumber}>40</Text>
+            <Text style={styles.weightNumber}>120</Text>
+          </View>
+          <SVG viewBox={`0 -3 ${width} 30`} width={width} height={30}>
             <AnimatedPath
               animatedProps={aniamtedProps}
               stroke={'#cdcdd2'}
@@ -156,13 +164,14 @@ const BezierSlider: NavigationFunctionComponent = ({componentId}) => {
             />
           </SVG>
         </View>
+        <Weight
+          translateX={translateX}
+          translateY={translateY}
+          isRunning={isRunning}
+        />
         <PanGestureHandler onGestureEvent={onGestureEvent}>
           <Animated.View style={[styles.sliderBall, rStyle]} />
         </PanGestureHandler>
-        <View style={styles.weightContainer}>
-          <Text style={styles.weightNumber}>40</Text>
-          <Text style={styles.weightNumber}>120</Text>
-        </View>
       </View>
     </DrawerWrapper>
   );
@@ -178,7 +187,7 @@ const styles = StyleSheet.create({
   },
   appbar: {
     width,
-    backgroundColor: 'transparent',
+    backgroundColor: '#fff',
     elevation: 0,
   },
   textContainer: {
@@ -198,24 +207,32 @@ const styles = StyleSheet.create({
   },
   svgContainer: {
     position: 'absolute',
-    top: height / 2 - 30,
+    top: height / 2,
     transform: [{rotate: `${Math.PI}rad`}],
   },
   sliderBall: {
+    position: 'absolute',
+    top: height / 2 + 40,
     backgroundColor: '#212027',
-    height: R - 5,
-    width: R - 5,
-    borderRadius: R / 2,
+    height: R * 0.75,
+    width: R * 0.75,
+    borderRadius: (R * 0.75) / 2,
   },
   weightContainer: {
     width,
+    paddingVertical: 10,
     paddingHorizontal: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    transform: [{rotate: `${Math.PI}rad`}],
   },
   weightNumber: {
     color: '#cdcdd2',
     fontSize: 15,
     fontWeight: 'bold',
+  },
+  button: {
+    alignSelf: 'flex-end',
+    marginLeft: 30,
   },
 });

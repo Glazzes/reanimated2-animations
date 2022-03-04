@@ -177,6 +177,16 @@ const BezierSlider: NavigationFunctionComponent = ({componentId}) => {
   );
 };
 
+BezierSlider.options = {
+  statusBar: {
+    translucent: true,
+    style: 'light',
+  },
+  topBar: {
+    visible: false,
+  },
+};
+
 export default BezierSlider;
 
 const styles = StyleSheet.create({

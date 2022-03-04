@@ -30,6 +30,12 @@ const GroceryList: NavigationFunctionComponent = ({componentId}) => {
   );
 };
 
+GroceryList.options = {
+  topBar: {
+    visible: false,
+  },
+};
+
 export default GroceryList;
 
 const {height, width} = Dimensions.get('window');

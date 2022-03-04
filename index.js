@@ -33,7 +33,6 @@ Navigation.events().registerAppLaunchedListener(() => {
                 },
                 topBar: {
                   visible: false,
-                  animate: false,
                 },
               },
             },

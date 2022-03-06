@@ -20,7 +20,6 @@ import {
 } from 'react-native-gesture-handler';
 import {Appbar} from 'react-native-paper';
 import {NavigationFunctionComponent} from 'react-native-navigation';
-import DrawerWrapper from '../../navigation/DrawerWrapper';
 import Weight from './Weight';
 
 export const R = 25;
@@ -141,46 +140,44 @@ const BezierSlider: NavigationFunctionComponent = ({componentId}) => {
   });
 
   return (
-    <DrawerWrapper parentComponentId={componentId}>
-      <View style={styles.root}>
-        <Appbar.Header style={styles.appbar}>
-          <Appbar.BackAction color={'#212027'} />
-        </Appbar.Header>
-        <View style={styles.textContainer}>
-          <Text style={styles.title}>What is your weight goal?</Text>
-          <ReText style={styles.weight} text={weightStatus} />
-        </View>
-
-        <View style={styles.svgContainer}>
-          <View style={styles.weightContainer}>
-            <Text style={styles.weightNumber}>40</Text>
-            <Text style={styles.weightNumber}>120</Text>
-          </View>
-          <SVG viewBox={`0 -3 ${width} 30`} width={width} height={30}>
-            <AnimatedPath
-              animatedProps={aniamtedProps}
-              stroke={'#cdcdd2'}
-              strokeWidth={3}
-            />
-          </SVG>
-        </View>
-        <Weight
-          translateX={translateX}
-          translateY={translateY}
-          isRunning={isRunning}
-        />
-        <PanGestureHandler onGestureEvent={onGestureEvent}>
-          <Animated.View style={[styles.sliderBall, rStyle]} />
-        </PanGestureHandler>
+    <View style={styles.root}>
+      <Appbar.Header style={styles.appbar}>
+        <Appbar.BackAction color={'#212027'} />
+      </Appbar.Header>
+      <View style={styles.textContainer}>
+        <Text style={styles.title}>What is your weight goal?</Text>
+        <ReText style={styles.weight} text={weightStatus} />
       </View>
-    </DrawerWrapper>
+
+      <View style={styles.svgContainer}>
+        <View style={styles.weightContainer}>
+          <Text style={styles.weightNumber}>40</Text>
+          <Text style={styles.weightNumber}>120</Text>
+        </View>
+        <SVG viewBox={`0 -3 ${width} 30`} width={width} height={30}>
+          <AnimatedPath
+            animatedProps={aniamtedProps}
+            stroke={'#cdcdd2'}
+            strokeWidth={3}
+          />
+        </SVG>
+      </View>
+      <Weight
+        translateX={translateX}
+        translateY={translateY}
+        isRunning={isRunning}
+      />
+      <PanGestureHandler onGestureEvent={onGestureEvent}>
+        <Animated.View style={[styles.sliderBall, rStyle]} />
+      </PanGestureHandler>
+    </View>
   );
 };
 
 BezierSlider.options = {
   statusBar: {
-    translucent: true,
-    style: 'light',
+    visible: false,
+    style: 'dark',
   },
   topBar: {
     visible: false,

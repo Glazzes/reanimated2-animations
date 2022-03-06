@@ -2,22 +2,26 @@ import React from 'react';
 import {StyleSheet, View, Image, Text, Dimensions} from 'react-native';
 import {Drawer as PaperDrawer} from 'react-native-paper';
 import {ScrollView} from 'react-native-gesture-handler';
-import {Layout, Navigation} from 'react-native-navigation';
-import {RNNDrawer} from 'react-native-navigation-drawer-extension';
-import {toBezierSlider, toGroceryApp} from './screenOptions';
+import {
+  Layout,
+  Navigation,
+  NavigationFunctionComponent,
+} from 'react-native-navigation';
+import {toBezierSlider, toCryptoAtom, toGroceryApp} from './screenOptions';
 
 type DrawerProps = {
   parentComponentId: string;
 };
 
-const Drawer: React.FC<DrawerProps> = ({parentComponentId}) => {
+const {statusBarHeight} = Navigation.constantsSync();
+
+const Drawer: NavigationFunctionComponent<DrawerProps> = () => {
   const goTo = (options: Layout) => {
-    Navigation.push(parentComponentId, options);
-    RNNDrawer.dismissDrawer();
+    Navigation.push('Center', options);
   };
 
   return (
-    <ScrollView style={styles.root}>
+    <ScrollView style={styles.root} showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
         <Image
           source={require('./assets/react-logo.png')}
@@ -33,8 +37,20 @@ const Drawer: React.FC<DrawerProps> = ({parentComponentId}) => {
         label={'Bezier slider'}
         onPress={() => goTo(toBezierSlider)}
       />
+
+      <PaperDrawer.Item
+        label={'Cyrpto atom'}
+        onPress={() => goTo(toCryptoAtom)}
+      />
     </ScrollView>
   );
+};
+
+Drawer.options = {
+  statusBar: {
+    drawBehind: true,
+    translucent: true,
+  },
 };
 
 export default Drawer;
@@ -44,7 +60,8 @@ const {width} = Dimensions.get('window');
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    marginTop: 20,
+    backgroundColor: '#fff',
+    paddingTop: statusBarHeight,
   },
   container: {
     width: width * 0.75,

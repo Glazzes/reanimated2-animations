@@ -1,29 +1,36 @@
-import {Layout} from 'react-native-navigation';
+import {Layout, Options} from 'react-native-navigation';
+
+// common options
+const options: Options = {
+  sideMenu: {
+    left: {
+      visible: false,
+    },
+  },
+  statusBar: {
+    visible: true,
+    style: 'dark',
+    drawBehind: true,
+  },
+};
 
 export const toGroceryApp: Layout = {
   component: {
-    options: {
-      statusBar: {
-        visible: true,
-        style: 'dark',
-        backgroundColor: '#f7f5f1',
-        drawBehind: true,
-      },
-    },
     name: 'GroceryApp',
+    options,
   },
 };
 
 export const toBezierSlider: Layout = {
   component: {
-    options: {
-      statusBar: {
-        visible: true,
-        style: 'dark',
-        backgroundColor: '#fff',
-        drawBehind: true,
-      },
-    },
     name: 'BezierSlider',
+    options,
+  },
+};
+
+export const toCryptoAtom: Layout = {
+  component: {
+    name: 'CryptoOrbiter',
+    options,
   },
 };

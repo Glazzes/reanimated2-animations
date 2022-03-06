@@ -1,7 +1,7 @@
 ## Bezier slider
 
 ### About
-This small project is based on this awesome [dribble shot](https://dribbble.com/shots/4833779-UI-Motion-kit), i could do it myself with the help of these 2 awesome videos [Liquid swipe](https://www.youtube.com/watch?v=6jxy5wfNpk0&t=266s) and [Jelly scroll](https://youtu.be/Xnj6uoW2PJM).
+This small project is based on this awesome [dribble shot](https://dribbble.com/shots/4833779-UI-Motion-kit), i could not do it myself without the help of these 2 awesome videos [Liquid swipe](https://www.youtube.com/watch?v=6jxy5wfNpk0&t=266s) and [Jelly scroll](https://youtu.be/Xnj6uoW2PJM).
 
 ### Observations
 - The curve made by the slider seems to be a quarter of the radius of a larger circle

@@ -16,3 +16,5 @@ This small project is based on this awesome [dribble shot](https://dribbble.com/
 ### Showcase
 [<img style="float: left; margin-right: 10px" width="250px" src="./assets/one.png" alt="Untouched slider">]("")
 <img style="float: left; margin-right: 10px" width="250px" src="./assets/two.png" alt="Touched slider">
+
+https://user-images.githubusercontent.com/52082794/156941721-260cf6fb-d225-4aae-ab9b-a34985eb70b1.mp4

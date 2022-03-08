@@ -14,7 +14,7 @@ const ellipseRadius = {x: center.x * 0.8, y: center.y * 0.67};
 
 LogBox.ignoreLogs(['[react-native-gesture-handler]']);
 
-const CryptoOrbiter: NavigationFunctionComponent = () => {
+const CryptoAtom: NavigationFunctionComponent = () => {
   return (
     <Div flex={1} flexDir={'column'} bg={'#181723'}>
       <SVG width={width} height={height / 2}>
@@ -94,7 +94,7 @@ const CryptoOrbiter: NavigationFunctionComponent = () => {
   );
 };
 
-CryptoOrbiter.options = {
+CryptoAtom.options = {
   statusBar: {
     visible: false,
     backgroundColor: '#181723',
@@ -105,7 +105,7 @@ CryptoOrbiter.options = {
   },
 };
 
-export default CryptoOrbiter;
+export default CryptoAtom;
 
 const styles = StyleSheet.create({
   box: {

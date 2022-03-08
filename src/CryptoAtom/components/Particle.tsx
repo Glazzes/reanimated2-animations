@@ -11,7 +11,7 @@ import Animated, {
 import {Image} from 'react-native-magnus';
 import {Electron} from './data';
 import {StyleSheet} from 'react-native';
-import {center, radius} from './CryptoOrbiter';
+import {center, radius} from './CryptoAtom';
 
 type PlanetProps = {
   electron: Electron;

@@ -2,12 +2,8 @@ import React from 'react';
 import {StyleSheet, View, Image, Text, Dimensions} from 'react-native';
 import {Drawer as PaperDrawer} from 'react-native-paper';
 import {ScrollView} from 'react-native-gesture-handler';
-import {
-  Layout,
-  Navigation,
-  NavigationFunctionComponent,
-} from 'react-native-navigation';
-import {toBezierSlider, toCryptoAtom, toGroceryApp} from './screenOptions';
+import {Navigation, NavigationFunctionComponent} from 'react-native-navigation';
+import {goTo} from './screenOptions';
 
 type DrawerProps = {
   parentComponentId: string;
@@ -16,10 +12,6 @@ type DrawerProps = {
 const {statusBarHeight} = Navigation.constantsSync();
 
 const Drawer: NavigationFunctionComponent<DrawerProps> = () => {
-  const goTo = (options: Layout) => {
-    Navigation.push('Center', options);
-  };
-
   return (
     <ScrollView style={styles.root} showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
@@ -31,17 +23,19 @@ const Drawer: NavigationFunctionComponent<DrawerProps> = () => {
       </View>
       <PaperDrawer.Item
         label={'Grocery store'}
-        onPress={() => goTo(toGroceryApp)}
+        onPress={() => goTo('GroceryStore')}
       />
       <PaperDrawer.Item
         label={'Bezier slider'}
-        onPress={() => goTo(toBezierSlider)}
+        onPress={() => goTo('BezierSlider')}
       />
 
       <PaperDrawer.Item
         label={'Cyrpto atom'}
-        onPress={() => goTo(toCryptoAtom)}
+        onPress={() => goTo('CyrptoAtom')}
       />
+
+      <PaperDrawer.Item label={'Albums'} onPress={() => goTo('Albums')} />
     </ScrollView>
   );
 };

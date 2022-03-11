@@ -26,3 +26,4 @@ Each and everyone of the following animations have a `README.md` file showcasing
 - [Grocery app](https://github.com/Glazzes/reanimated2-animations/tree/main/src/GroceryList)
 - [Bezier slider](https://github.com/Glazzes/reanimated2-animations/tree/main/src/BezierSlider)
 - [Crypto atom](https://github.com/Glazzes/reanimated2-animations/tree/main/src/CryptoAtom)
+- [Albums](https://github.com/Glazzes/reanimated2-animations/tree/main/src/Albums)

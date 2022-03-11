@@ -1,4 +1,4 @@
-import {Layout, Options} from 'react-native-navigation';
+import {Navigation, Options} from 'react-native-navigation';
 
 // common options
 const options: Options = {
@@ -14,23 +14,11 @@ const options: Options = {
   },
 };
 
-export const toGroceryApp: Layout = {
-  component: {
-    name: 'GroceryApp',
-    options,
-  },
-};
-
-export const toBezierSlider: Layout = {
-  component: {
-    name: 'BezierSlider',
-    options,
-  },
-};
-
-export const toCryptoAtom: Layout = {
-  component: {
-    name: 'CryptoOrbiter',
-    options,
-  },
+export const goTo = (route: string) => {
+  Navigation.push('Center', {
+    component: {
+      name: route,
+      options,
+    },
+  });
 };

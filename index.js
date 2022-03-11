@@ -4,6 +4,7 @@ import {BezierSlider} from './src/BezierSlider';
 import {GroceryList, GroceryDetail} from './src/GroceryList';
 import {CryptoAtom} from './src/CryptoAtom';
 import Drawer from './src/navigation/Drawer';
+import {Albums} from './src/Albums';
 
 Navigation.registerComponent('Drawer', () => Drawer);
 
@@ -11,6 +12,7 @@ Navigation.registerComponent('Drawer', () => Drawer);
 Navigation.registerComponent('GroceryApp', () =>
   gestureHandlerRootHOC(GroceryList),
 );
+
 Navigation.registerComponent('GroceryApp.Detail', () => GroceryDetail);
 
 // Bezier slider screens
@@ -20,6 +22,9 @@ Navigation.registerComponent('BezierSlider', () =>
 
 // Crypto atom
 Navigation.registerComponent('CryptoAtom', () => CryptoAtom);
+
+// Albums app
+Navigation.registerComponent('Albums', () => gestureHandlerRootHOC(Albums));
 
 Navigation.events().registerAppLaunchedListener(() => {
   Navigation.setRoot({
@@ -36,7 +41,7 @@ Navigation.events().registerAppLaunchedListener(() => {
             children: [
               {
                 component: {
-                  name: 'CryptoAtom',
+                  name: 'BezierSlider',
                   options: {
                     statusBar: {
                       backgroundColor: '#fff',

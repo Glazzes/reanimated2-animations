@@ -36,6 +36,11 @@ const Drawer: NavigationFunctionComponent<DrawerProps> = () => {
       />
 
       <PaperDrawer.Item label={'Albums'} onPress={() => goTo('Albums')} />
+
+      <PaperDrawer.Item
+        label={'Tinder (like app)'}
+        onPress={() => goTo('Tinder')}
+      />
     </ScrollView>
   );
 };

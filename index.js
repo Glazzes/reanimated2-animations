@@ -5,6 +5,7 @@ import {GroceryList, GroceryDetail} from './src/GroceryList';
 import {CryptoAtom} from './src/CryptoAtom';
 import Drawer from './src/navigation/Drawer';
 import {Albums} from './src/Albums';
+import {Tinder} from './src/Tinder';
 
 Navigation.registerComponent('Drawer', () => Drawer);
 
@@ -20,11 +21,10 @@ Navigation.registerComponent('BezierSlider', () =>
   gestureHandlerRootHOC(BezierSlider),
 );
 
-// Crypto atom
+// Single screen animations
 Navigation.registerComponent('CryptoAtom', () => CryptoAtom);
-
-// Albums app
 Navigation.registerComponent('Albums', () => gestureHandlerRootHOC(Albums));
+Navigation.registerComponent('Tinder', () => gestureHandlerRootHOC(Tinder));
 
 Navigation.events().registerAppLaunchedListener(() => {
   Navigation.setRoot({
@@ -41,7 +41,7 @@ Navigation.events().registerAppLaunchedListener(() => {
             children: [
               {
                 component: {
-                  name: 'BezierSlider',
+                  name: 'Tinder',
                   options: {
                     statusBar: {
                       backgroundColor: '#fff',

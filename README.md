@@ -27,3 +27,4 @@ Each and everyone of the following animations have a `README.md` file showcasing
 - [Bezier slider](https://github.com/Glazzes/reanimated2-animations/tree/main/src/BezierSlider)
 - [Crypto atom](https://github.com/Glazzes/reanimated2-animations/tree/main/src/CryptoAtom)
 - [Albums](https://github.com/Glazzes/reanimated2-animations/tree/main/src/Albums)
+- [Tinder swipe](https://github.com/Glazzes/reanimated2-animations/tree/main/src/Tinder)

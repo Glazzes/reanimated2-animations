@@ -15,23 +15,17 @@ import {snapPoint, useVector} from 'react-native-redash';
 import {User} from './data';
 import {Div, Icon, Text} from 'react-native-magnus';
 import StatusText from './StatusText';
-import {
-  Canvas,
-  Paint,
-  LinearGradient,
-  Rect,
-  vec,
-} from '@shopify/react-native-skia';
+import {LinearGradient} from 'expo-linear-gradient';
 
 const {width, height} = Dimensions.get('window');
 
 const RIGHT_SNAP = width / 2;
-const LEFT_SNAP = (-1 * width) / 2;
+const LEFT_SNAP = -width / 2;
 
 const DOWN_SNAP = height / 2;
-const UP_SNAP = -height / 2;
+const UP_SNAP = -height / 1.5;
 
-const MAX_ANGLE = Math.PI / 9;
+const MAX_ANGLE = Math.PI / 10;
 const ROTATED_CARD_WIDTH =
   height * Math.sin(MAX_ANGLE) + width * Math.cos(MAX_ANGLE) - width / 2;
 
@@ -49,7 +43,7 @@ const Card: React.FC<CardProps> = ({user, index, currentIndex}) => {
     const rotate = interpolate(
       translate.x.value,
       [-width / 2, 0, width / 2],
-      [-Math.PI / 9, 0, Math.PI / 9],
+      [-MAX_ANGLE, 0, MAX_ANGLE],
       Extrapolate.CLAMP,
     );
 
@@ -129,21 +123,14 @@ const Card: React.FC<CardProps> = ({user, index, currentIndex}) => {
             bgImg={user.profilePicture}
             flexDir={'column'}
             justifyContent={'space-between'}>
-            <Canvas style={StyleSheet.absoluteFill}>
-              <Paint>
-                <LinearGradient
-                  start={vec(0, 0)}
-                  end={vec(width, 400)}
-                  colors={[
-                    'rgba(0, 0, 0, 0.4)',
-                    'transparent',
-                    'rgba(0, 0, 0, 0.4)',
-                  ]}
-                  transform={[{rotate: Math.PI / 8}]}
-                />
-              </Paint>
-              <Rect x={0} y={0} width={width} height={400} />
-            </Canvas>
+            <LinearGradient
+              style={StyleSheet.absoluteFill}
+              colors={[
+                'rgba(0, 0, 0, 0.3)',
+                'transparent',
+                'rgba(0, 0, 0, 0.5)',
+              ]}
+            />
             <Div flex={1} flexDir={'row'}>
               <StatusText
                 status="like"

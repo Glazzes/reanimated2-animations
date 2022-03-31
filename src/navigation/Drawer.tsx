@@ -32,7 +32,7 @@ const Drawer: NavigationFunctionComponent<DrawerProps> = () => {
 
       <PaperDrawer.Item
         label={'Cyrpto atom'}
-        onPress={() => goTo('CyrptoAtom')}
+        onPress={() => goTo('CryptoAtom')}
       />
 
       <PaperDrawer.Item label={'Albums'} onPress={() => goTo('Albums')} />
@@ -40,6 +40,11 @@ const Drawer: NavigationFunctionComponent<DrawerProps> = () => {
       <PaperDrawer.Item
         label={'Tinder (like app)'}
         onPress={() => goTo('Tinder')}
+      />
+
+      <PaperDrawer.Item
+        label={'Google config'}
+        onPress={() => goTo('GoogleConfig')}
       />
     </ScrollView>
   );

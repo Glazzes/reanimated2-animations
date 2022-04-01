@@ -52,9 +52,8 @@ Navigation.events().registerAppLaunchedListener(() => {
                   name: 'Pinch2Zoom',
                   options: {
                     statusBar: {
-                      backgroundColor: '#fff',
-                      style: 'dark',
                       drawBehind: true,
+                      visible: false,
                     },
                     topBar: {
                       visible: false,

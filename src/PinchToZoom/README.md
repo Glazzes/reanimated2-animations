@@ -6,15 +6,22 @@ Pinch to zoom feature it's a must have user interaction for every single app tha
 This small project is an enhnaced "translation" of [William candillon's](https://github.com/wcandillon/can-it-be-done-in-react-native/blob/master/the-10-min/src/PinchGesture/PinchGesture.tsx) pinch to zoom as it was origanlly written in reanimated 1 and gesture handler 1.
 
 ### Observations
-Williams candillon implemnetation only comes with pinch to zoom and offset other capabilities have been added by myself taking telegram images as inspiration.
+Williams candillon implemnetation only comes with pinch to zoom and offset, other capabilities have been added by myself taking telegram images as inspiration.
 
 
 ### Additions
 - Pan: the ability to drag the image around while keeping it within screen boundaries
-- Double tap: on double tap it counts as a pinch to zoom for +1 scale
+- Double tap: on double tap it will trigger a +1 scale pinch to zoom
 -  Single tap: this is useful for stuff like hiding elements from the screen
 
 ### Techniques
 - Tap gesture
 - Pinch gesture
 - Pan gesture
+
+### Showcase
+[<img style="float: left; margin-right: 10px" width="250px" src="./assets/md/one.png" alt="Untouched slider">]("")
+<img style="float: left; margin-right: 10px" width="250px" src="./assets/md/two.png" alt="Touched slider">
+<img style="float: left; margin-right: 10px" width="250px" src="./assets/md/three.png" alt="Touched slider">
+
+https://user-images.githubusercontent.com/52082794/161176464-4433c8b0-6052-4613-88b2-6b35097a2524.mp4

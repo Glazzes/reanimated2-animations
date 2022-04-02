@@ -14,47 +14,12 @@ import TestContent from './TestContent';
 
 const GoogleConfig: NavigationFunctionComponent = () => {
   const translateY = useSharedValue<number>(0);
-  const scrollY = useSharedValue<number>(0);
-  const ref = useRef<Animated.ScrollView>();
-
-  const infoTY = useSharedValue<number>(0);
-
-  const onScroll = useAnimatedScrollHandler({
-    onScroll: e => (scrollY.value = e.contentOffset.y),
-  });
-
-  const rStyle = useAnimatedStyle(() => {
-    const ty = interpolate(
-      scrollY.value,
-      [0, 200],
-      [200, 0],
-      Extrapolate.CLAMP,
-    );
-
-    return {
-      position: 'absolute',
-      top: ty,
-    };
-  });
+  const infoHeight = useSharedValue<number>(200);
 
   return (
     <View style={styles.root}>
-      <Animated.View
-        style={[
-          {
-            width: 200,
-            height: 50,
-            backgroundColor: 'pink',
-          },
-        ]}
-      />
-      <Animated.View style={rStyle}>
-        <Animated.ScrollView
-          onScroll={onScroll}
-          style={[{flex: 1}]}
-          contentContainerStyle={{height: 1000, backgroundColor: 'tomato'}}
-        />
-      </Animated.View>
+      <UserInfo infoHeight={infoHeight} translateY={translateY} />
+      <TestContent infoHeight={infoHeight} translate={translateY} />
     </View>
   );
 };
@@ -63,8 +28,10 @@ export default GoogleConfig;
 
 GoogleConfig.options = {
   statusBar: {
-    backgroundColor: '#fff',
-    style: 'dark',
+    drawBehind: true,
+    translucent: true,
+    style: 'light',
+    visible: true,
   },
   topBar: {
     visible: false,

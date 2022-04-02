@@ -72,7 +72,7 @@ const Pinch2Zoom: NavigationFunctionComponent = () => {
 
       translate.x.value = clamp(translateX, maxDistance.value.x);
       translate.y.value = clamp(translateY, maxDistance.value.y);
-      scale.value = scaleOffset.value + e.scale - 1;
+      scale.value = scaleOffset.value * e.scale;
     })
     .onEnd(() => {
       originAssign.value = true;
@@ -206,6 +206,9 @@ const Pinch2Zoom: NavigationFunctionComponent = () => {
 Pinch2Zoom.options = {
   statusBar: {
     drawBehind: true,
+    visible: false,
+  },
+  topBar: {
     visible: false,
   },
 };

@@ -22,6 +22,16 @@ const Drawer: NavigationFunctionComponent<DrawerProps> = () => {
         <Text style={styles.title}>Reanimated 2 animations</Text>
       </View>
       <PaperDrawer.Item
+        label={'Tinder (like app)'}
+        onPress={() => goTo('Tinder')}
+      />
+
+      <PaperDrawer.Item
+        label={'Pinch to zoom'}
+        onPress={() => goTo('Pinch2Zoom')}
+      />
+
+      <PaperDrawer.Item
         label={'Grocery store'}
         onPress={() => goTo('GroceryStore')}
       />
@@ -38,13 +48,8 @@ const Drawer: NavigationFunctionComponent<DrawerProps> = () => {
       <PaperDrawer.Item label={'Albums'} onPress={() => goTo('Albums')} />
 
       <PaperDrawer.Item
-        label={'Tinder (like app)'}
-        onPress={() => goTo('Tinder')}
-      />
-
-      <PaperDrawer.Item
-        label={'Google config'}
-        onPress={() => goTo('GoogleConfig')}
+        label={'Phone call'}
+        onPress={() => goTo('PhoneCall')}
       />
     </ScrollView>
   );

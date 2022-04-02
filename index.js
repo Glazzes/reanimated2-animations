@@ -8,6 +8,7 @@ import {Albums} from './src/Albums';
 import {Tinder} from './src/Tinder';
 import {GoogleConfig} from './src/GoogleConfig';
 import {Pinch2Zoom} from './src/PinchToZoom';
+import {PhoneCall} from './src/PhoneCall';
 
 Navigation.registerComponent('Drawer', () => Drawer);
 
@@ -23,6 +24,7 @@ Navigation.registerComponent('BezierSlider', () =>
   gestureHandlerRootHOC(BezierSlider),
 );
 
+Navigation.registerComponent('PhoneCall', () => PhoneCall);
 Navigation.registerComponent('CryptoAtom', () => CryptoAtom);
 Navigation.registerComponent('Albums', () => gestureHandlerRootHOC(Albums));
 Navigation.registerComponent('Tinder', () => gestureHandlerRootHOC(Tinder));
@@ -49,7 +51,7 @@ Navigation.events().registerAppLaunchedListener(() => {
             children: [
               {
                 component: {
-                  name: 'Pinch2Zoom',
+                  name: 'PhoneCall',
                   options: {
                     statusBar: {
                       drawBehind: true,

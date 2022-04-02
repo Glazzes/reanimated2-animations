@@ -5,14 +5,11 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Animated, {
   Extrapolate,
   interpolate,
-  useAnimatedGestureHandler,
   useAnimatedStyle,
+  useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {
-  PanGestureHandler,
-  PanGestureHandlerGestureEvent,
-} from 'react-native-gesture-handler';
+import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import {snapPoint} from 'react-native-redash';
 import {Divider} from 'react-native-paper';
 
@@ -25,52 +22,49 @@ const IMAGE_MIN_SIZE: number = 20;
 
 type UserInfoProps = {
   translateY: Animated.SharedValue<number>;
-  scrolly: Animated.SharedValue<number>;
+  infoHeight: Animated.SharedValue<number>;
 };
 
-const UserInfo: React.FC<UserInfoProps> = ({translateY, scrolly}) => {
+const UserInfo: React.FC<UserInfoProps> = ({infoHeight}) => {
   const {width} = useWindowDimensions();
+  const offset = useSharedValue<number>(0);
 
-  const onGestureEvent = useAnimatedGestureHandler<
-    PanGestureHandlerGestureEvent,
-    {y: number}
-  >({
-    onStart: (_, ctx) => {
-      ctx.y = translateY.value;
-    },
-    onActive: ({translationY}, ctx) => {
-      translateY.value = ctx.y + translationY;
-    },
-    onEnd: ({velocityY}) => {
-      const snap = snapPoint(translateY.value, velocityY, [-100, 0]);
-      translateY.value = withTiming(snap);
-    },
-  });
+  const pan = Gesture.Pan()
+    .onStart(_ => {
+      offset.value = infoHeight.value;
+    })
+    .onChange(e => {
+      infoHeight.value = Math.min(200, offset.value + e.translationY);
+    })
+    .onEnd(({velocityY}) => {
+      const snap = snapPoint(infoHeight.value, velocityY, [0, 200]);
+      infoHeight.value = withTiming(snap);
+    });
 
   const rImageStyles = useAnimatedStyle(() => {
     const size = interpolate(
-      translateY.value,
-      [0, -100],
+      infoHeight.value,
+      [200, 0],
       [IMAGE_MAX_SIZE, IMAGE_MIN_SIZE + PADDING],
       Extrapolate.CLAMP,
     );
 
     const left = interpolate(
-      translateY.value,
-      [0, -100],
+      infoHeight.value,
+      [200, 0],
       [width / 2 - size / 2, width - size - PADDING],
       Extrapolate.CLAMP,
     );
 
     const top = interpolate(
-      translateY.value,
-      [0, -100],
+      infoHeight.value,
+      [200, 0],
       [0, -45],
       Extrapolate.CLAMP,
     );
 
     return {
-      zIndex: 2000,
+      zIndex: 20,
       width: size,
       height: size,
       borderRadius: size / 2,
@@ -81,30 +75,21 @@ const UserInfo: React.FC<UserInfoProps> = ({translateY, scrolly}) => {
   });
 
   const rBox = useAnimatedStyle(() => {
-    const defaultHeight = 200;
-
-    const tyHeight = interpolate(
-      scrolly.value,
-      [0, 100],
-      [200, 0],
-      Extrapolate.CLAMP,
-    );
-
-    return {height: tyHeight};
+    return {height: infoHeight.value};
   });
 
   const rUserInfoStyles = useAnimatedStyle(() => {
     const opacity = interpolate(
-      translateY.value,
-      [0, -60],
+      infoHeight.value,
+      [200, 100],
       [1, 0],
       Extrapolate.CLAMP,
     );
 
     const ty = interpolate(
-      translateY.value,
-      [0, -75],
-      [0, -150],
+      infoHeight.value,
+      [200, 0],
+      [0, -200],
       Extrapolate.CLAMP,
     );
 
@@ -115,9 +100,9 @@ const UserInfo: React.FC<UserInfoProps> = ({translateY, scrolly}) => {
   });
 
   return (
-    <PanGestureHandler onGestureEvent={onGestureEvent}>
+    <GestureDetector gesture={pan}>
       <Animated.View>
-        <Appbar translateY={translateY} />
+        <Appbar translateY={infoHeight} />
         <Animated.View style={[styles.root]}>
           <Animated.Image source={MAGNUM_BULLETS} style={rImageStyles} />
           <Animated.View style={rBox}>
@@ -139,7 +124,7 @@ const UserInfo: React.FC<UserInfoProps> = ({translateY, scrolly}) => {
         </Animated.View>
         <Divider />
       </Animated.View>
-    </PanGestureHandler>
+    </GestureDetector>
   );
 };
 

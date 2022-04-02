@@ -21,7 +21,7 @@ const Appbar: React.FC<AppbarProps> = ({translateY}) => {
   const rIconBoxStyles = useAnimatedStyle(() => {
     const width = interpolate(
       translateY.value,
-      [0, -ICON_BOX_WIDTH],
+      [200, 0],
       [ICON_BOX_WIDTH, ICON_BOX_WIDTH + IMAGE_MIN_SIZE * 2.3],
       Extrapolate.CLAMP,
     );
@@ -32,8 +32,8 @@ const Appbar: React.FC<AppbarProps> = ({translateY}) => {
   const rTextStyles = useAnimatedStyle(() => {
     const width = interpolate(
       translateY.value,
-      [0, -ICON_BOX_WIDTH],
-      [0, ICON_BOX_WIDTH],
+      [0, 200],
+      [ICON_BOX_WIDTH, 0],
       Extrapolate.CLAMP,
     );
 

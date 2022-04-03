@@ -28,7 +28,6 @@ const PhoneCall: NavigationFunctionComponent = () => {
       <Wave delay={2 * 400} />
       <Wave delay={3 * 400} />
       <Wave delay={4 * 400} />
-      <Wave delay={5 * 400} />
     </Div>
   );
 };

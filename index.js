@@ -6,7 +6,6 @@ import {CryptoAtom} from './src/CryptoAtom';
 import Drawer from './src/navigation/Drawer';
 import {Albums} from './src/Albums';
 import {Tinder} from './src/Tinder';
-import {GoogleConfig} from './src/GoogleConfig';
 import {Pinch2Zoom} from './src/PinchToZoom';
 import {PhoneCall} from './src/PhoneCall';
 import {HealthMate} from './src/HealthMate';
@@ -52,7 +51,7 @@ Navigation.events().registerAppLaunchedListener(() => {
             children: [
               {
                 component: {
-                  name: 'HealthMate',
+                  name: 'Pinch2Zoom',
                   options: {
                     statusBar: {
                       drawBehind: true,

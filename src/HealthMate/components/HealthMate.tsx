@@ -1,23 +1,26 @@
-import {View, StyleSheet, LogBox} from 'react-native';
+import {View, StyleSheet, LogBox, FlatList} from 'react-native';
 import React from 'react';
-import Animated, {
-  useAnimatedRef,
-  useSharedValue,
-} from 'react-native-reanimated';
+import {useAnimatedRef, useSharedValue} from 'react-native-reanimated';
 import {NavigationFunctionComponent} from 'react-native-navigation';
-import Content from './Content';
-import BMIScrollview from './BMIScrollview';
+import BMIScrollView from './BMIScrollview';
 import WeightIndicator from './WeightIndicator';
+import BMIIndicator from './BMIIndicator';
+import Line from './Line';
+import TinyCircle from './TinyCircle';
 
 LogBox.ignoreLogs(['[react-native-gesture-handler]']);
 
 const HealthMate: NavigationFunctionComponent = ({}) => {
-  const scrollRef = useAnimatedRef<Animated.FlatList<number>>();
-  const sharedValue = useSharedValue<number>(0);
+  const flatlistRef = useAnimatedRef<FlatList<number>>();
+  const translateY = useSharedValue<number>(0);
 
   return (
     <View style={styles.root}>
-      <WeightIndicator translateY={sharedValue} />
+      <BMIScrollView ref={flatlistRef} />
+      <Line translateY={translateY} />
+      <TinyCircle translateY={translateY} />
+      <BMIIndicator translateY={translateY} />
+      <WeightIndicator ref={flatlistRef} translateY={translateY} />
     </View>
   );
 };

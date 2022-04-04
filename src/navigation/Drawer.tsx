@@ -45,6 +45,11 @@ const Drawer: NavigationFunctionComponent<DrawerProps> = () => {
         onPress={() => goTo('CryptoAtom')}
       />
 
+      <PaperDrawer.Item
+        label={'WiThings (HealthMate)'}
+        onPress={() => goTo('HealthMate')}
+      />
+
       <PaperDrawer.Item label={'Albums'} onPress={() => goTo('Albums')} />
 
       <PaperDrawer.Item

@@ -1,11 +1,11 @@
-import React, {useEffect} from 'react';
-import {Dimensions, ListRenderItemInfo, StyleSheet} from 'react-native';
-import Animated from 'react-native-reanimated';
+import React from 'react';
+import {
+  Dimensions,
+  ListRenderItemInfo,
+  StyleSheet,
+  FlatList,
+} from 'react-native';
 import BMI from './BMI';
-
-type BMIScrollviewProps = {
-  scrollRef: React.RefObject<Animated.FlatList<number>>;
-};
 
 const {width, height} = Dimensions.get('window');
 const bmis = new Array(50).fill(0).map((_, index) => index + 1);
@@ -18,28 +18,23 @@ function renderItem(itemInfo: ListRenderItemInfo<number>): React.ReactElement {
   return <BMI index={itemInfo.item} />;
 }
 
-const BMIScrollview: React.FC<BMIScrollviewProps> = ({scrollRef}) => {
-  useEffect(() => {
-    scrollRef.current
-      ?.getNode()
-      .scrollToOffset({offset: 20 * (height / 9), animated: true});
-  });
-
+const BMIScrollView = React.forwardRef<FlatList<number>>((_, ref) => {
   return (
-    <Animated.FlatList
-      ref={scrollRef}
+    <FlatList
+      ref={ref}
       data={bmis}
       keyExtractor={keyExtractor}
       renderItem={renderItem}
+      initialScrollIndex={20}
       showsVerticalScrollIndicator={false}
-      style={styles.root}
       scrollEnabled={false}
+      style={styles.root}
       contentContainerStyle={{backgroundColor: '#37caff'}}
     />
   );
-};
+});
 
-export default BMIScrollview;
+export default BMIScrollView;
 
 const styles = StyleSheet.create({
   root: {

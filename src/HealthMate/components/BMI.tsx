@@ -21,4 +21,4 @@ const BMI: React.FC<BMIProps> = ({index}) => {
   );
 };
 
-export default BMI;
+export default React.memo(BMI);

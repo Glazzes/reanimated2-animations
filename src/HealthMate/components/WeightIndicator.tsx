@@ -1,12 +1,14 @@
-import {Dimensions, StyleSheet} from 'react-native';
+import {StyleSheet, View, FlatList, Dimensions} from 'react-native';
 import React from 'react';
 import Animated, {
   cancelAnimation,
   Extrapolate,
   interpolate,
+  scrollTo,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
+  withDecay,
   withDelay,
   withRepeat,
   withTiming,
@@ -18,10 +20,16 @@ type WeightIndicatorProps = {
   translateY: Animated.SharedValue<number>;
 };
 
+// Repeatition of variables along multiple components it's needed bause some times
+// the metro bundler does not want to cooperate with importing them correctly
 const {height} = Dimensions.get('window');
-const INDICATOR_SIZE = height / 2 - 40;
+const INDICATOR_HEIGHT = 80;
+const THRESHOLD = height / 2 - INDICATOR_HEIGHT / 2;
 
-const WeightIndicator: React.FC<WeightIndicatorProps> = ({translateY}) => {
+const WeightIndicator = React.forwardRef<
+  FlatList<number>,
+  WeightIndicatorProps
+>(({translateY}, ref) => {
   const scale = useSharedValue<number>(1);
   const offset = useSharedValue<number>(0);
 
@@ -29,13 +37,13 @@ const WeightIndicator: React.FC<WeightIndicatorProps> = ({translateY}) => {
     const base = 84;
     const plus = interpolate(
       translateY.value,
-      [-INDICATOR_SIZE, 0, INDICATOR_SIZE],
+      [-THRESHOLD, 0, THRESHOLD],
       [-25, 0, 25],
       Extrapolate.CLAMP,
     );
 
     const result = base + plus;
-    return result.toString();
+    return result.toFixed(1).toString();
   }, [translateY.value]);
 
   const pan = Gesture.Pan()
@@ -45,12 +53,26 @@ const WeightIndicator: React.FC<WeightIndicatorProps> = ({translateY}) => {
       scale.value = withTiming(1);
     })
     .onUpdate(e => {
-      translateY.value = offset.value + e.translationY;
+      translateY.value = Math.max(
+        -THRESHOLD,
+        Math.min(offset.value + e.translationY, THRESHOLD),
+      );
+
+      const scroll = (height / 9) * 20;
+      // @ts-ignore
+      scrollTo(ref, 0, scroll + translateY.value, false);
     })
-    .onEnd(_ => {
-      scale.value = withDelay(
-        3000,
-        withRepeat(withTiming(1.3, {duration: 1000}), -1, true),
+    .onEnd(({velocityY}) => {
+      translateY.value = withDecay(
+        {velocity: velocityY, clamp: [-THRESHOLD, THRESHOLD]},
+        isFinished => {
+          if (isFinished) {
+            scale.value = withDelay(
+              3000,
+              withRepeat(withTiming(1.2, {duration: 500}), -1, true),
+            );
+          }
+        },
       );
     });
 
@@ -62,20 +84,23 @@ const WeightIndicator: React.FC<WeightIndicatorProps> = ({translateY}) => {
 
   return (
     <GestureDetector gesture={pan}>
-      <Animated.View style={[rStyle, styles.root]}>
+      <Animated.View style={[styles.root, rStyle]}>
         <ReText text={indicator} style={styles.text} />
+        <View
+          style={[StyleSheet.absoluteFill, {backgroundColor: 'transparent'}]}
+        />
       </Animated.View>
     </GestureDetector>
   );
-};
+});
 
 export default WeightIndicator;
 
 const styles = StyleSheet.create({
   root: {
-    height: 80,
-    width: 80,
-    borderRadius: 40,
+    height: INDICATOR_HEIGHT,
+    width: INDICATOR_HEIGHT,
+    borderRadius: INDICATOR_HEIGHT / 2,
     backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',

@@ -13,11 +13,18 @@ type Styles = {
   aspectRatio: number;
 };
 
-const imageStyles = (
-  dimensions: Vector<Animated.SharedValue<number>>,
-): Styles => {
+const maxScale = (
+  dimensions: {width: number; height: number},
+  layout: Vector<Animated.SharedValue<number>>,
+): number => {
   'worklet';
-  const aspectRatio = dimensions.x.value / dimensions.y.value;
+  return layout.x.value > layout.y.value
+    ? dimensions.width / layout.x.value
+    : dimensions.height / layout.y.value;
+};
+
+const imageStyles = (dimensions: {width: number; height: number}): Styles => {
+  const aspectRatio = dimensions.width / dimensions.height;
   const s: Styles = {
     width: undefined,
     maxWidth: width,
@@ -34,9 +41,9 @@ const imageStyles = (
   return s;
 };
 
-const clamp = (value: number, maxDistance: number): number => {
+const clamp = (left: number, value: number, right: number): number => {
   'worklet';
-  return Math.max(Math.min(value, maxDistance), -maxDistance);
+  return Math.max(Math.min(left, value), right);
 };
 
 const pinch = (
@@ -74,13 +81,4 @@ const pinch = (
   return {translateX, translateY};
 };
 
-const maximunDistance = (
-  layout: number,
-  scale: number,
-  dimension: number,
-): number => {
-  'worklet';
-  return Math.max(0, (layout * scale - dimension) / 2);
-};
-
-export {clamp, pinch, maximunDistance, imageStyles};
+export {clamp, pinch, imageStyles, maxScale};

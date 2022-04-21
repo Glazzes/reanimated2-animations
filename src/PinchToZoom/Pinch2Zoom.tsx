@@ -13,52 +13,41 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
-import {clamp, imageStyles, maximunDistance, pinch} from './utils/utils';
+import {clamp, imageStyles, maxScale, pinch} from './utils/utils';
 
 LogBox.ignoreLogs(['[react-native-gesture-handler]']);
 
 const {width, height} = Dimensions.get('window');
 
 const Pinch2Zoom: NavigationFunctionComponent = () => {
+  const d = {width: 860, height: 860};
+  const s = imageStyles(d);
+
   const layout = useVector(1, 1);
-  const dimensions = useVector(860, 860);
 
-  const maxScale = useDerivedValue<number>(() => {
-    let mScale = 1;
-    const aspecRatio = dimensions.x.value / dimensions.y.value;
-    if (aspecRatio < 1) {
-      mScale = Math.floor(dimensions.y.value / layout.y.value);
-    }
-    if (aspecRatio >= 1) {
-      mScale = Math.floor(dimensions.x.value / layout.x.value);
-    }
-
-    return mScale;
-  }, [dimensions.x.value, dimensions.y.value, layout.x.value, layout.y.value]);
-
-  const origin = useVector(0, 0);
   const scale = useSharedValue<number>(1);
   const scaleOffset = useSharedValue<number>(1);
 
   const translate = useVector(0, 0);
   const offset = useVector(0, 0);
+
+  const origin = useVector(0, 0);
   const originAssign = useSharedValue<boolean>(true);
 
-  const iStyles = useDerivedValue(() => {
-    return imageStyles(dimensions);
-  }, [dimensions.x.value, dimensions.y.value]);
+  const translation = useDerivedValue<{x: number; y: number}>(() => {
+    const offsetX = Math.max((layout.x.value * scale.value - width) / 2, 0);
+    const offsetY = Math.max((layout.y.value * scale.value - height) / 2, 0);
 
-  const maxDistance = useDerivedValue<{x: number; y: number}>(() => {
-    const x = maximunDistance(layout.x.value, scale.value, width);
-    const y = maximunDistance(layout.y.value, scale.value, height);
+    const x = clamp(-offsetX, translate.x.value, offsetX);
+    const y = clamp(-offsetY, translate.y.value, offsetY);
 
     return {x, y};
-  }, [scale.value, layout.x.value, layout.y.value]);
+  }, [translate.x.value, translate.y.value, scale.value]);
 
   const pinchGesture = Gesture.Pinch()
     .onStart(_ => {
-      offset.x.value = translate.x.value;
-      offset.y.value = translate.y.value;
+      offset.x.value = translation.value.x;
+      offset.y.value = translation.value.y;
       scaleOffset.value = scale.value;
     })
     .onChange(e => {
@@ -70,9 +59,9 @@ const Pinch2Zoom: NavigationFunctionComponent = () => {
         origin,
       );
 
-      translate.x.value = clamp(translateX, maxDistance.value.x);
-      translate.y.value = clamp(translateY, maxDistance.value.y);
-      scale.value = scaleOffset.value * e.scale;
+      translate.x.value = translateX;
+      translate.y.value = translateY;
+      scale.value = clamp(0, scaleOffset.value * e.scale, maxScale(d, layout));
     })
     .onEnd(() => {
       originAssign.value = true;
@@ -86,22 +75,14 @@ const Pinch2Zoom: NavigationFunctionComponent = () => {
   const pan = Gesture.Pan()
     .maxPointers(1)
     .onStart(_ => {
-      offset.x.value = translate.x.value;
-      offset.y.value = translate.y.value;
+      offset.x.value = translation.value.x;
+      offset.y.value = translation.value.y;
       cancelAnimation(translate.x);
       cancelAnimation(translate.y);
     })
     .onChange(e => {
-      const tx = offset.x.value + e.translationX;
-      const ty = offset.y.value + e.translationY;
-
-      if (scale.value === 1) {
-        translate.y.value = ty;
-        return;
-      }
-
-      translate.y.value = clamp(ty, maxDistance.value.y);
-      translate.x.value = clamp(tx, maxDistance.value.x);
+      translate.y.value = offset.x.value + e.translationX;
+      translate.x.value = offset.y.value + e.translationY;
     })
     .onEnd(({velocityX, velocityY}) => {
       if (scale.value === 1) {
@@ -109,47 +90,27 @@ const Pinch2Zoom: NavigationFunctionComponent = () => {
         return;
       }
 
-      translate.x.value = withDecay({
-        velocity: velocityX,
-        clamp: [-maxDistance.value.x, maxDistance.value.x],
-      });
-
-      translate.y.value = withDecay({
-        velocity: velocityY,
-        clamp: [-maxDistance.value.y, maxDistance.value.y],
-      });
+      translate.x.value = withDecay({velocity: velocityX});
+      translate.y.value = withDecay({velocity: velocityY});
     });
 
   const doubleTap = Gesture.Tap()
     .numberOfTaps(2)
     .onStart(e => {
-      let toScale = scale.value;
-      if (maxScale.value > toScale) {
-        toScale = Math.floor(toScale + 1);
-      } else {
+      const toMaxScale = maxScale(d, layout);
+
+      let toScale = scale.value * 2;
+      if (toScale > toMaxScale) {
         toScale = 1;
       }
 
       const {translateX, translateY} = pinch(
         layout,
         offset,
-        {
-          focalX: e.x,
-          focalY: e.y,
-          scale: toScale,
-        },
+        {focalX: e.x, focalY: e.y, scale: toScale},
         originAssign,
         origin,
       );
-
-      if (toScale === 1) {
-        translate.x.value = withTiming(0);
-        translate.y.value = withTiming(0);
-        scale.value = withTiming(toScale);
-        offset.x.value = withTiming(0);
-        offset.y.value = withTiming(0);
-        return;
-      }
 
       translate.x.value = withTiming(translateX);
       translate.y.value = withTiming(translateY);
@@ -161,16 +122,16 @@ const Pinch2Zoom: NavigationFunctionComponent = () => {
 
   const gesture = Gesture.Race(pan, pinchGesture, doubleTap);
 
-  const reanimatedImageStyles = useAnimatedStyle(() => {
-    const translateX = clamp(translate.x.value, maxDistance.value.x);
+  const rStyle = useAnimatedStyle(() => {
     const translateY =
-      scale.value === 1
-        ? translate.y.value
-        : clamp(translate.y.value, maxDistance.value.y);
+      scale.value === 1 ? translate.y.value : translation.value.y;
 
     return {
-      ...iStyles.value,
-      transform: [{translateX}, {translateY}, {scale: scale.value}],
+      transform: [
+        {translateX: translation.value.x},
+        {translateY},
+        {scale: scale.value},
+      ],
     };
   });
 
@@ -193,10 +154,10 @@ const Pinch2Zoom: NavigationFunctionComponent = () => {
             layout.x.value = nativeEvent.layout.width;
             layout.y.value = nativeEvent.layout.height;
           }}
-          style={[reanimatedImageStyles]}
+          style={[s, rStyle]}
           source={require('./assets/cryptid.jpg')}
-          resizeMethod={'resize'}
-          resizeMode={'contain'}
+          resizeMethod={'scale'}
+          resizeMode={'cover'}
         />
       </GestureDetector>
     </Animated.View>

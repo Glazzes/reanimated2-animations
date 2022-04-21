@@ -5,6 +5,7 @@ import Animated, {
   Extrapolate,
   interpolate,
   scrollTo,
+  useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -25,6 +26,7 @@ type WeightIndicatorProps = {
 const {height} = Dimensions.get('window');
 const INDICATOR_HEIGHT = 80;
 const THRESHOLD = height / 2 - INDICATOR_HEIGHT / 2;
+const SCROLL = (height / 9) * 20;
 
 const WeightIndicator = React.forwardRef<
   FlatList<number>,
@@ -57,10 +59,6 @@ const WeightIndicator = React.forwardRef<
         -THRESHOLD,
         Math.min(offset.value + e.translationY, THRESHOLD),
       );
-
-      const scroll = (height / 9) * 20;
-      // @ts-ignore
-      scrollTo(ref, 0, scroll + translateY.value, false);
     })
     .onEnd(({velocityY}) => {
       translateY.value = withDecay(
@@ -75,6 +73,14 @@ const WeightIndicator = React.forwardRef<
         },
       );
     });
+
+  useAnimatedReaction(
+    () => translateY.value,
+    value => {
+      // @ts-ignore
+      scrollTo(ref, 0, SCROLL + value, false);
+    },
+  );
 
   const rStyle = useAnimatedStyle(() => {
     return {

@@ -9,6 +9,8 @@ import {Tinder} from './src/Tinder';
 import {Pinch2Zoom} from './src/PinchToZoom';
 import {PhoneCall} from './src/PhoneCall';
 import {HealthMate} from './src/HealthMate';
+import Friction from './src/Testing/Friction';
+import QrScanerPath from './src/Testing/QrScanerPath';
 
 Navigation.registerComponent('Drawer', () => Drawer);
 
@@ -36,6 +38,10 @@ Navigation.registerComponent('Pinch2Zoom', () =>
   gestureHandlerRootHOC(Pinch2Zoom),
 );
 
+Navigation.registerComponent('Testing', () =>
+  gestureHandlerRootHOC(QrScanerPath),
+);
+
 Navigation.events().registerAppLaunchedListener(() => {
   Navigation.setRoot({
     root: {
@@ -51,7 +57,7 @@ Navigation.events().registerAppLaunchedListener(() => {
             children: [
               {
                 component: {
-                  name: 'Pinch2Zoom',
+                  name: 'Testing',
                   options: {
                     statusBar: {
                       drawBehind: true,

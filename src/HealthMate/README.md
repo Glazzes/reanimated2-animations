@@ -1,7 +1,7 @@
 ## WiThings HealthMate
 
 ### About
-This is animation it's my implementation of an old [William candillon's video](https://www.youtube.com/watch?v=AZPc-aeYkSY&t=478s), i foudn the idea interesting although i didn't watch it as i wanted to implement it by myself.
+This animation it's my implementation of an old [William candillon's video](https://www.youtube.com/watch?v=AZPc-aeYkSY&t=478s), i found the idea very interesting although i didn't watch the video as i wanted to implement it by myself (also it was implemented in reanimated 1 and RNGH 1 bakc then).
 
 ### Observations
 - Flatlist's contentOffset props do not seems to work at all

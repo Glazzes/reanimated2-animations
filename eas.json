@@ -1,6 +1,6 @@
 {
   "cli": {
-    "version": ">= 0.37.0"
+    "version": ">= 0.50.0"
   },
   "build": {
     "dev": {
@@ -8,13 +8,6 @@
       "distribution": "internal",
       "android": {
         "gradleCommand": ":app:assembleDebug",
-        "buildType": "apk"
-      }
-    },
-    "prod": {
-      "distribution": "internal",
-      "android": {
-        "gradleCommand": ":app:assembleRelease",
         "buildType": "apk"
       }
     }

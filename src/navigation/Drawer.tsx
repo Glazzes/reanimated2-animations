@@ -32,6 +32,11 @@ const Drawer: NavigationFunctionComponent<DrawerProps> = () => {
       />
 
       <PaperDrawer.Item
+        label={'Rotation color selection'}
+        onPress={() => goTo('ColorRotation')}
+      />
+
+      <PaperDrawer.Item
         label={'Grocery store'}
         onPress={() => goTo('GroceryStore')}
       />

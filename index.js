@@ -11,6 +11,7 @@ import {PhoneCall} from './src/PhoneCall';
 import {HealthMate} from './src/HealthMate';
 import Friction from './src/Testing/Friction';
 import QrScanerPath from './src/Testing/QrScanerPath';
+import {ColorRotation} from './src/ColorRotation';
 
 Navigation.registerComponent('Drawer', () => Drawer);
 
@@ -40,6 +41,10 @@ Navigation.registerComponent('Pinch2Zoom', () =>
 
 Navigation.registerComponent('Testing', () =>
   gestureHandlerRootHOC(QrScanerPath),
+);
+
+Navigation.registerComponent('ColorRotation', () =>
+  gestureHandlerRootHOC(ColorRotation),
 );
 
 Navigation.events().registerAppLaunchedListener(() => {

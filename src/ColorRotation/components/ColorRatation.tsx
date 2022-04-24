@@ -2,7 +2,7 @@ import {View, Dimensions, StyleSheet} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {NavigationFunctionComponent} from 'react-native-navigation';
 import Svg, {Path} from 'react-native-svg';
-import {selectionColors} from '../utils/data';
+import {selectionColors} from './data';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -12,7 +12,7 @@ import {GestureDetector, Gesture} from 'react-native-gesture-handler';
 import Chart from './Chart';
 import ColorIndicator from './ColorIndicator';
 import {TAU} from 'react-native-redash';
-import {buildPath} from '../utils/utils';
+import {buildPath} from './utilts';
 import {ShadowView} from '@dimaportenko/react-native-shadow-view';
 
 const {width, height} = Dimensions.get('window');

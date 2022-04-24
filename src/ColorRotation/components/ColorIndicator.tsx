@@ -5,7 +5,8 @@ import Animated, {
   interpolateColor,
   useAnimatedProps,
 } from 'react-native-reanimated';
-import {selectionColors} from '../utils/data';
+import {selectionColors} from './data';
+import {TAU} from 'react-native-redash';
 
 type ColorIndicatorProps = {
   rotation: Animated.SharedValue<number>;
@@ -40,7 +41,7 @@ const ColorIndicator: React.FC<ColorIndicatorProps> = ({rotation, theta}) => {
   const animatedProps = useAnimatedProps(() => {
     return {
       fill: interpolateColor(
-        -rotation.value + Math.PI * 2,
+        rotation.value + TAU,
         selectionColors.map((_, i) => i * theta),
         selectionColors,
         'RGB',

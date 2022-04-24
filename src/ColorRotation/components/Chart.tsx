@@ -1,10 +1,10 @@
 import {Dimensions, StyleSheet} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {charInfo, Origin} from '../utils/data';
+import {charInfo, Origin} from './data';
 import Svg, {Circle, Path} from 'react-native-svg';
 import Animated, {useAnimatedStyle} from 'react-native-reanimated';
 import {TAU} from 'react-native-redash';
-import {buildPath} from '../utils/utils';
+import {buildPath} from './utilts';
 import {ShadowView} from '@dimaportenko/react-native-shadow-view';
 
 type ChartProps = {
@@ -56,7 +56,11 @@ const Chart: React.FC<ChartProps> = ({rotation}) => {
         <Svg
           width={R * 2 + STROKE_WIDTH * 2}
           height={R * 2 + STROKE_WIDTH * 2}
-          style={{borderRadius: R}}
+          x={STROKE_WIDTH}
+          y={STROKE_WIDTH}
+          viewBox={`${-STROKE_WIDTH} ${-STROKE_WIDTH} ${
+            R * 2 + STROKE_WIDTH * 2
+          } ${R * 2 + STROKE_WIDTH * 2}`}
           renderToHardwareTextureAndroid={true}>
           {paths.map((path, index) => {
             return (
@@ -65,7 +69,7 @@ const Chart: React.FC<ChartProps> = ({rotation}) => {
                 key={`path-${index}`}
                 fill={charInfo[index].color}
                 stroke={'#fff'}
-                strokeWidth={2}
+                strokeWidth={STROKE_WIDTH}
               />
             );
           })}

@@ -21,15 +21,15 @@ const v = 30;
 const R = 10;
 
 const path = [
-  'M 0 0',
+  `M ${-ARC / 8} 0`,
   `h ${h}`,
   `a ${R} ${R} 0 0 1 ${R} ${R}`,
   `v ${v}`,
   `a ${R} ${R} 0 0 1 ${-R} ${R}`,
-  `h ${-h / 2 + ARC}`,
+  `h ${-h / 2}`,
   `a ${R} ${R} 0 0 1 ${R} ${R}`,
   `a ${R} ${R} 0 0 1 ${R} ${-R}`,
-  `h ${-h / 2 + ARC}`,
+  `h ${-h / 2}`,
   `a ${R} ${R} 0 0 1 ${-R} ${-R}`,
   `v ${-v}`,
   `a ${R} ${R} 0 0 1 ${R} ${-R}`,
@@ -49,7 +49,7 @@ const ColorIndicator: React.FC<ColorIndicatorProps> = ({rotation, theta}) => {
   });
 
   return (
-    <Svg width={h + ARC * 2} height={v * 6} style={styles.svg}>
+    <Svg width={h + ARC} height={v + ARC * 2} style={styles.svg}>
       <AnimatedPath d={path} animatedProps={animatedProps} />
     </Svg>
   );
@@ -57,8 +57,8 @@ const ColorIndicator: React.FC<ColorIndicatorProps> = ({rotation, theta}) => {
 
 const styles = StyleSheet.create({
   svg: {
-    marginTop: 10,
     alignSelf: 'center',
+    marginTop: 15,
   },
 });
 

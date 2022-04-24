@@ -10,10 +10,10 @@ import Animated, {
 } from 'react-native-reanimated';
 import {GestureDetector, Gesture} from 'react-native-gesture-handler';
 import Chart from './Chart';
-import PlaceHolder from './PlaceHolder';
 import ColorIndicator from './ColorIndicator';
 import {TAU} from 'react-native-redash';
 import {buildPath} from '../utils/utils';
+import {ShadowView} from '@dimaportenko/react-native-shadow-view';
 
 const {width, height} = Dimensions.get('window');
 
@@ -24,7 +24,8 @@ type Origin = {
 
 const R = width;
 const theta = TAU / selectionColors.length;
-export const inputRange = selectionColors.map((_, i) => i * theta);
+
+const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
 const ColorRatation: NavigationFunctionComponent = ({}) => {
   const [paths, setPaths] = useState<string[]>([]);
@@ -43,7 +44,7 @@ const ColorRatation: NavigationFunctionComponent = ({}) => {
     })
     .onChange(e => {
       const angle = Math.atan2(-(e.y - R), e.x - R);
-      const normalized = angle < 0 ? (angle + TAU) % TAU : angle % TAU;
+      const normalized = (angle + TAU) % TAU;
       rotation.value = (offset.value + (normalized - origin.value) + TAU) % TAU;
     })
     .onEnd(() => {
@@ -54,7 +55,7 @@ const ColorRatation: NavigationFunctionComponent = ({}) => {
   const rSvgStyles = useAnimatedStyle(() => {
     return {
       transform: [
-        {rotate: `${-(Math.PI / 2 - theta / 2)}rad`},
+        {rotate: `${-Math.PI / 2 + theta / 2}rad`},
         {rotate: `${-rotation.value}rad`},
       ],
     };
@@ -82,8 +83,12 @@ const ColorRatation: NavigationFunctionComponent = ({}) => {
 
   return (
     <View style={styles.root}>
-      <Animated.View style={[rSvgStyles, styles.svg]}>
-        <Svg width={R * 2} height={R * 2} renderToHardwareTextureAndroid={true}>
+      <ShadowView style={[styles.shadow, styles.svg]}>
+        <AnimatedSvg
+          width={R * 2}
+          height={R * 2}
+          style={rSvgStyles}
+          renderToHardwareTextureAndroid={true}>
           {paths.map((path, index) => {
             return (
               <Path
@@ -95,15 +100,10 @@ const ColorRatation: NavigationFunctionComponent = ({}) => {
               />
             );
           })}
-        </Svg>
-      </Animated.View>
+        </AnimatedSvg>
+      </ShadowView>
       <Chart rotation={rotation} />
-      <PlaceHolder />
       <ColorIndicator rotation={rotation} theta={theta} />
-      {/*
-        A view with the same dimensions of the svg is used to prevent involuntary rotations
-        by keeping the finger on screen
-        */}
       <GestureDetector gesture={rotationGesture}>
         <Animated.View style={styles.svg} />
       </GestureDetector>
@@ -136,6 +136,13 @@ const styles = StyleSheet.create({
     height: R * 2,
     borderRadius: R,
     overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  shadow: {
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: R,
   },
 });
 

@@ -10,6 +10,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@dimaportenko/react-native-shadow-view": "^0.1.4",
     "@shopify/react-native-skia": "https://github.com/Shopify/react-native-skia/releases/download/v0.1.104-alpha/shopify-react-native-skia-0.1.104.tgz",
     "@types/react-native-vector-icons": "^6.4.10",
     "color": "^4.2.1",

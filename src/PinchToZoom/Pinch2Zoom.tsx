@@ -120,7 +120,12 @@ const Pinch2Zoom: NavigationFunctionComponent = () => {
       originAssign.value = true;
     });
 
-  const gesture = Gesture.Race(pan, pinchGesture, doubleTap);
+  const singleTap = Gesture.Tap()
+    .numberOfTaps(1)
+    .onEnd(() => console.log('single tap!'));
+
+  const taps = Gesture.Exclusive(doubleTap, singleTap);
+  const gesture = Gesture.Race(pan, pinchGesture, taps);
 
   const rStyle = useAnimatedStyle(() => {
     const translateY =

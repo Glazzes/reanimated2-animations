@@ -1226,6 +1226,11 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@dimaportenko/react-native-shadow-view@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@dimaportenko/react-native-shadow-view/-/react-native-shadow-view-0.1.4.tgz#303032afa0f20229b7643d697f5641b3e26bb4bb"
+  integrity sha512-HL+LL0m/CmXucqUtfILFEDmLh5JMVQ+oyh4ltxqXJ/spc4kcZ8/1JhWMlv245yx7K17qKoxslpG+mdRpvJCj3A==
+
 "@dripsy/core@^3.5.3":
   version "3.5.3"
   resolved "https://registry.npmjs.org/@dripsy/core/-/core-3.5.3.tgz"

@@ -28,11 +28,19 @@ interpolate(translateX, [0, maxLength], [0, 2 * Math.PI]);
 
 A similar behaviour can be seen on[ William Candillon's BBC player video](https://www.youtube.com/watch?v=zF9rmPH00AA&t=418s)
 
+### Perfomance issues
+
+- Reanimated 2's `interpolateColor` function reduces framerate by up to 31 fps
+- React native svg destroy's performance in Js thread
+
+In order to solve these problems I moved from svg to [react-native-skia](https://shopify.github.io) as it keeps 60 fps on both threads, to replace `interpolateColor` function i had to make
+an "svg mask"
+
 ### Showcase
 
 [<img style="float: left; margin-right: 10px" width="250px" src="./assets/md/one.png" alt="Untouched slider">]("")
 <img style="float: left; margin-right: 10px" width="250px" src="./assets/md/two.png" alt="Touched slider">
 
-> **WARNING :warning:**: I own a very low end phone and laptop both of them suffer heavily when recording, this added to the performace required to make this animation run turns in a very slow video, app runs faster when not recording
+> **WARNING :warning:**: I own a very low end phone and laptop both of them suffer heavily when recording, when not recording this animation runs at 60 fps no problem
 
-https://user-images.githubusercontent.com/52082794/164987093-c74a5e20-ba39-4ba6-a04b-07126312300f.mp4
+https://user-images.githubusercontent.com/52082794/165546297-f9102197-0d76-4207-ae82-804c68c42728.mp4

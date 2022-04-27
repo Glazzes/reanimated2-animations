@@ -2096,9 +2096,10 @@
     component-type "^1.2.1"
     join-component "^1.1.0"
 
-"@shopify/react-native-skia@https://github.com/Shopify/react-native-skia/releases/download/v0.1.104-alpha/shopify-react-native-skia-0.1.104.tgz":
-  version "0.1.104"
-  resolved "https://github.com/Shopify/react-native-skia/releases/download/v0.1.104-alpha/shopify-react-native-skia-0.1.104.tgz#1fbdc86ddd8620b989040c2f3b08d0cae8175c0a"
+"@shopify/react-native-skia@^0.1.122":
+  version "0.1.122"
+  resolved "https://registry.yarnpkg.com/@shopify/react-native-skia/-/react-native-skia-0.1.122.tgz#bc40ec7d2fdf31ff7db59f9035611b27045a7c9e"
+  integrity sha512-YJ8n1yvKPPwXiMbna0CL87ivNl5V1n92Nw9RpOY7aFOlniVcaCW25EscfVSFZVy6+L7g6cE+AJv3RCl89Zw6/Q==
   dependencies:
     react-reconciler "^0.26.2"
 
